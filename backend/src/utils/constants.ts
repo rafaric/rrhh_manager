@@ -1,8 +1,8 @@
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 
-export const PORT: number = Number(process.env.PORT) || 3000
+export const PORT: number = Number(process.env.PORT) || 3000;
 
 export enum CODE {
 	BAD_REQUEST = 400,
