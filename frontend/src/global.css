@@ -2,10 +2,10 @@
  * Tailwind CSS imports
  * View the full documentation at https://tailwindcss.com
  */
+@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic&display=swap');
 
 /**
  * WHAT IS THIS FILE?
@@ -44,4 +44,12 @@ body {
   padding: 0;
   margin: 0;
   line-height: inherit;
+}
+
+.is-active {
+  @apply border-l-2 border-primary text-primary bg-primary/10
+}
+
+.is-active-icon {
+  @apply stroke-primary fill-primary text-primary
 }
