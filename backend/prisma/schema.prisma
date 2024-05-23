@@ -49,11 +49,11 @@ model Empleado {
 }
 
 model Empresa {
-  id        String     @id @default(uuid()) @db.Uuid
-  nombre    String
-  ruc       Int        @unique
-  direccion String
-  Empleado  Empleado[]
+  id       String     @id @default(uuid()) @db.Uuid
+  name     String
+  ruc      Int        @unique
+  address  String
+  Empleado Empleado[]
 }
 
 model Contrato {
