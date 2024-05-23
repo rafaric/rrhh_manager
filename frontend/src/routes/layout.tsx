@@ -1,5 +1,6 @@
 import { component$, Slot } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
+import { Sidebar } from "~/components/Sidebar";
 
 export const useCheckToken = routeLoader$(({ cookie, redirect, pathname }) => {
   if (cookie.get("token") && pathname.includes("auth")) {
@@ -13,7 +14,8 @@ export const useCheckToken = routeLoader$(({ cookie, redirect, pathname }) => {
 export default component$(() => {
   return (
     <>
-      <main>
+      <main class="flex font-ZenMaru">
+        <Sidebar />
         <Slot />
       </main>
     </>

@@ -15,6 +15,7 @@ export default {
       primary100: "#e6e2f8",
       dark: "#16151C",
       light: "#D9E1E1",
+      gray: "#A2A1A8",
     },
     fontFamily: {
       ZenMaru: ["Zen Maru Gothic", "sans-serif", "serif"],
