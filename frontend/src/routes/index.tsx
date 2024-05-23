@@ -2,11 +2,7 @@ import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 
 export default component$(() => {
-  return (
-    <>
-      <p class="text-primary800">hola mundo</p>
-    </>
-  );
+  return <>hola mundo</>;
 });
 
 export const head: DocumentHead = {
