@@ -37,15 +37,11 @@ export default component$(() => {
         validate={[required<string>("Please enter your name.")]}
       >
         {(field, props) => (
-          <>
-            <input
-              class="rounded-xl border border-light p-2"
-              {...props}
-              type="name"
-              value={field.value}
-            />
+          <label class="rounded-xl border border-light p-2">
+            <p class="text-xs">Nombre</p>
+            <input class="w-full" {...props} type="name" value={field.value} />
             {field.error && <div>{field.error}</div>}
-          </>
+          </label>
         )}
       </Field>
       <Field
@@ -56,15 +52,11 @@ export default component$(() => {
         ]}
       >
         {(field, props) => (
-          <>
-            <input
-              class="rounded-xl border border-light p-2"
-              {...props}
-              type="email"
-              value={field.value}
-            />
+          <label class="rounded-xl border border-light p-2">
+            <p class="text-xs">Email</p>
+            <input class="w-full" {...props} type="email" value={field.value} />
             {field.error && <div>{field.error}</div>}
-          </>
+          </label>
         )}
       </Field>
       <Field
@@ -75,15 +67,16 @@ export default component$(() => {
         ]}
       >
         {(field, props) => (
-          <>
+          <label class="rounded-xl border border-light p-2">
+            <p class="text-xs">Contraseña</p>
             <input
-              class="rounded-xl border border-light p-2"
+              class="w-full"
               {...props}
               type="password"
               value={field.value}
             />
             {field.error && <div>{field.error}</div>}
-          </>
+          </label>
         )}
       </Field>
       <button
