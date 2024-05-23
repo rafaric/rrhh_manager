@@ -28,7 +28,10 @@ export default component$(() => {
     // Runs on client
   });
   return (
-    <Form onSubmit$={handleSubmit} class="m-auto flex flex-col gap-3">
+    <Form
+      onSubmit$={handleSubmit}
+      class="m-auto flex max-w-xs flex-grow flex-col gap-3"
+    >
       <Field
         name="name"
         validate={[required<string>("Please enter your name.")]}
@@ -67,7 +70,7 @@ export default component$(() => {
       <Field
         name="password"
         validate={[
-          minLength(8, "You password must have 8 characters or more."),
+          minLength(6, "You password must have 6 characters or more."),
           required<string>("Please enter your password."),
         ]}
       >

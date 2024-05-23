@@ -3,7 +3,7 @@ import RegisterForm from "~/components/RegisterForm";
 
 export default component$(() => {
   return (
-    <section class="min-h-svh flex">
+    <section class="m-auto flex min-h-svh w-screen">
       <RegisterForm />
     </section>
   );
