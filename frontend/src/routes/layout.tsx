@@ -3,7 +3,7 @@ import { routeLoader$ } from "@builder.io/qwik-city";
 
 export const useCheckToken = routeLoader$(({ cookie, redirect, pathname }) => {
   if (cookie.get("token") && pathname.includes("auth")) {
-    throw redirect(301, "/dashboard");
+    throw redirect(301, "/");
   }
   if (!cookie.get("token") && !pathname.includes("auth")) {
     throw redirect(301, "/auth/register");

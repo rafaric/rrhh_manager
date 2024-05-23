@@ -24,7 +24,7 @@ export default component$(() => {
       body: JSON.stringify(values),
     })
       .then((res) => res.json())
-      .then((data) => console.log(data));
+      .then(() => location.reload());
     // Runs on client
   });
   return (
@@ -87,7 +87,7 @@ export default component$(() => {
         class="btn rounded-xl bg-primary p-2 font-bold text-light"
         type="submit"
       >
-        Registerse
+        Registrarse
       </button>
     </Form>
   );
