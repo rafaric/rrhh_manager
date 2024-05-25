@@ -1,90 +1,89 @@
-import type { QRL } from "@builder.io/qwik";
-import { $, component$ } from "@builder.io/qwik";
-import type { SubmitHandler } from "@modular-forms/qwik";
-import { email, minLength, required, useForm } from "@modular-forms/qwik";
+/** @jsxImportSource react */
+import { qwikify$ } from "@builder.io/qwik-react";
+import { useState } from "react";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useAppStore } from "~/store";
+
 type RegisterForm = {
-  name: string;
   email: string;
   password: string;
 };
-
-export default component$(() => {
-  const [, { Form, Field }] = useForm<RegisterForm>({
-    loader: {
-      value: {
-        email: "",
-        password: "",
-        name: "",
-      },
-    },
-  });
-  const handleSubmit: QRL<SubmitHandler<RegisterForm>> = $((values) => {
-    fetch("/api/register", {
-      method: "POST",
-      body: JSON.stringify(values),
-    })
-      .then((res) => res.json())
-      .then(() => location.reload());
-    // Runs on client
-  });
-  return (
-    <Form
-      onSubmit$={handleSubmit}
-      class="m-auto flex max-w-xs flex-grow flex-col gap-3"
-    >
-      <Field
-        name="name"
-        validate={[required<string>("Please enter your name.")]}
+export const RegisterForm = qwikify$(
+  () => {
+    const {
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm<RegisterForm>();
+    const setUser = useAppStore((state) => state.setUser);
+    const [messageError, setMessageError] = useState("");
+    const onSubmit: SubmitHandler<RegisterForm> = async (inputData) => {
+      try {
+        const res = await fetch(`/api/register`, {
+          method: "POST",
+          body: JSON.stringify(inputData),
+        });
+        const { data, message } = await res.json();
+        if (res.status === 201) {
+          setUser(data);
+          location.reload();
+        } else {
+          setMessageError(message);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    return (
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid grid-rows-1 gap-3"
       >
-        {(field, props) => (
-          <label class="rounded-xl border border-light p-2">
-            <p class="text-xs">Nombre</p>
-            <input class="w-full" {...props} type="name" value={field.value} />
-            {field.error && <div>{field.error}</div>}
-          </label>
-        )}
-      </Field>
-      <Field
-        name="email"
-        validate={[
-          required<string>("Please enter your email."),
-          email("The email address is badly formatted."),
-        ]}
-      >
-        {(field, props) => (
-          <label class="rounded-xl border border-light p-2">
-            <p class="text-xs">Email</p>
-            <input class="w-full" {...props} type="email" value={field.value} />
-            {field.error && <div>{field.error}</div>}
-          </label>
-        )}
-      </Field>
-      <Field
-        name="password"
-        validate={[
-          minLength(6, "You password must have 6 characters or more."),
-          required<string>("Please enter your password."),
-        ]}
-      >
-        {(field, props) => (
-          <label class="rounded-xl border border-light p-2">
-            <p class="text-xs">Contraseña</p>
-            <input
-              class="w-full"
-              {...props}
-              type="password"
-              value={field.value}
-            />
-            {field.error && <div>{field.error}</div>}
-          </label>
-        )}
-      </Field>
-      <button
-        class="btn rounded-xl bg-primary p-2 font-bold text-light"
-        type="submit"
-      >
-        Registrarse
-      </button>
-    </Form>
-  );
-});
+        <p className="text-center font-semibold text-[#f00]">{messageError}</p>
+        <label className="rounded-xl border border-primary px-3 py-1">
+          <p className="text-xs text-primary">Email</p>
+          <input
+            className="w-full outline-none"
+            {...register("email", {
+              required: {
+                value: true,
+                message: "El email es obligatorio",
+              },
+              pattern: {
+                value: /^\S+@\S+$/i,
+                message: "Ingrese un email valido",
+              },
+            })}
+          />
+          <p> {errors.email?.message}</p>
+        </label>
+        <label className="rounded-xl border border-primary px-3 py-1">
+          <p className="text-xs text-primary">Contraseña</p>
+          <input
+            type="password"
+            className="w-full outline-none"
+            {...register("password", {
+              required: {
+                value: true,
+                message: "La contraseña es obligatoria",
+              },
+              minLength: {
+                value: 8,
+                message: "Debe tener un minimo de 8 caracteres",
+              },
+            })}
+          />
+          <p>{errors.password?.message}</p>
+        </label>
+        <button
+          className="btn text-white rounded-xl bg-primary p-3 text-[#fff]"
+          type="submit"
+        >
+          Registrarse
+        </button>
+      </form>
+    );
+  },
+  { eagerness: "load" },
+);

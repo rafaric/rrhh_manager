@@ -6,9 +6,21 @@ interface RegisterUser {
 }
 export const onRequest: RequestHandler = async ({ request, json, cookie }) => {
   const body: RegisterUser = await request.json();
-  console.log(body);
-  if (body.email) {
-    cookie.set("token", body.password, { path: "/" });
-    json(201, { message: "created", data: body });
+  try {
+    const res = await fetch("http://localhost:3000/api/v1/users/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+
+    if (data && res.status === 201) {
+      cookie.set("user_loggin", data.data.id, { path: "/" });
+    }
+    json(res.status, data);
+  } catch (error) {
+    console.log(error);
   }
 };
