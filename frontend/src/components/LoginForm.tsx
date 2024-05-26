@@ -5,29 +5,31 @@ import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useAppStore } from "~/store";
 
-type RegisterForm = {
+type LoginForm = {
   email: string;
   password: string;
 };
-export const RegisterForm = qwikify$(
+export const LoginForm = qwikify$(
   () => {
     const {
       register,
       handleSubmit,
       formState: { errors },
-    } = useForm<RegisterForm>();
+    } = useForm<LoginForm>();
     const [isLoadind, setIsLoadind] = useState(false);
+
     const setUser = useAppStore((state) => state.setUser);
     const [messageError, setMessageError] = useState("");
-    const onSubmit: SubmitHandler<RegisterForm> = async (inputData) => {
+    const onSubmit: SubmitHandler<LoginForm> = async (inputData) => {
       setIsLoadind(true);
+
       try {
-        const res = await fetch(`/api/register`, {
+        const res = await fetch(`/api/login`, {
           method: "POST",
           body: JSON.stringify(inputData),
         });
         const { data, message } = await res.json();
-        if (res.status === 201) {
+        if (res.status === 200) {
           setUser(data);
           location.reload();
         } else {
@@ -91,7 +93,7 @@ export const RegisterForm = qwikify$(
               className="m-auto w-4 animate-spin"
             />
           ) : (
-            "Registrarse"
+            "Iniciar sesión"
           )}
         </button>
       </form>
