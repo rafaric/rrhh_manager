@@ -2,6 +2,7 @@ import { Router } from "express";
 import UserController from "../controllers/user.controller";
 import { body } from "express-validator";
 import { HandleInputErrors } from "../middlewares/validationInput";
+import { isLogged } from "../middlewares/validateSession";
 
 const router: Router = Router();
 
@@ -32,5 +33,7 @@ router.post(
 	HandleInputErrors,
 	UserController.login
 );
+
+router.get("/", isLogged, UserController.getSession);
 
 export default router;

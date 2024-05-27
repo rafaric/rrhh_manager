@@ -21,6 +21,19 @@ class UserService {
 		return true;
 	};
 
+	public getById = async (id: UserPayload["id"]) => {
+		const user = await prisma.usuario.findUnique({
+			where: { id },
+			include: { contrato: true, empresa: true, solicitud: true }
+		});
+
+		if (!user) {
+			throw new HttpException(CODE.NOT_FOUND, "Usuario no Existe");
+		}
+
+		return user;
+	};
+
 	public createUser = async (data: AuthData) => {
 		const userExists = await this.findByEmail(data.email);
 

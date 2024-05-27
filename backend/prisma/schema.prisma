@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -25,27 +19,27 @@ model Usuario {
   direccion            String?
   ciudad               String?
   codigo_postal        String?
-  contrato             Contrato?          @relation(fields: [contrato_id], references: [id])
   contrato_id          String?            @db.Uuid
-  empresa              Empresa?           @relation(fields: [empresa_id], references: [id])
   empresa_id           String?            @db.Uuid
-  solicitud            SolicitudLicencia? @relation(fields: [solicitudLicencia_id], references: [id])
   solicitudLicencia_id String?            @db.Uuid
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
-}
-
-enum Role {
-  ADMIN
-  EMPLEADO
-  USER
+  contrato             Contrato?          @relation(fields: [contrato_id], references: [id])
+  empresa              Empresa?           @relation(fields: [empresa_id], references: [id])
+  solicitud            SolicitudLicencia? @relation(fields: [solicitudLicencia_id], references: [id])
 }
 
 model Empresa {
   id      String    @id @default(uuid()) @db.Uuid
-  name    String
-  ruc     Int       @unique
   address String
+  name    String
+  city    String
+  country String
+  cuit    Int       @unique
+  email   String
+  phone   String
+  sector  String
+  webSite String?
   Usuario Usuario[]
 }
 
@@ -53,11 +47,11 @@ model Contrato {
   id           String    @id @default(uuid()) @db.Uuid
   salario      Float
   descripcion  String
-  Usuario      Usuario[]
-  cargo        Cargo     @relation(fields: [cargo_id], references: [id])
   cargo_id     String    @db.Uuid
   fecha_inicio DateTime  @default(now())
   fecha_fin    DateTime
+  cargo        Cargo     @relation(fields: [cargo_id], references: [id])
+  Usuario      Usuario[]
 }
 
 model SolicitudLicencia {
@@ -70,6 +64,19 @@ model SolicitudLicencia {
   Usuario      Usuario[]
 }
 
+model Cargo {
+  id          String     @id @default(uuid()) @db.Uuid
+  nombre      String
+  descripcion String
+  Contrato    Contrato[]
+}
+
+enum Role {
+  ADMIN
+  EMPLEADO
+  USER
+}
+
 enum Estado {
   PENDIENTE
   APROBADO
@@ -78,11 +85,4 @@ enum Estado {
 enum Tipo {
   VACACIONES
   ENFERMEDAD
-}
-
-model Cargo {
-  id          String     @id @default(uuid()) @db.Uuid
-  nombre      String
-  descripcion String
-  Contrato    Contrato[]
 }
