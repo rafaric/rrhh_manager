@@ -44,8 +44,14 @@ enum Role {
 model Empresa {
   id      String    @id @default(uuid()) @db.Uuid
   name    String
-  ruc     Int       @unique
+  cuit    Int       @unique
+  webSite String?
+  city    String
+  country String
   address String
+  phone   String
+  email   String
+  sector  String
   Usuario Usuario[]
 }
 
