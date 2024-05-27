@@ -1,6 +1,6 @@
 import { compare, genSalt, hash } from "bcrypt";
 import { sign, verify } from "jsonwebtoken";
-import { UserResponse } from "../types/user";
+import { UserPayload } from "../types/user";
 import { JWT_SECRET } from "./constants";
 
 export const hashPassword = async (password: string) => {
@@ -15,7 +15,7 @@ export const comparePassword = async (
 	return await compare(password, hashPassword);
 };
 
-export const generateJwt = (payload: UserResponse) => {
+export const generateJwt = (payload: UserPayload) => {
 	return sign(payload, JWT_SECRET, { expiresIn: "1d" });
 };
 

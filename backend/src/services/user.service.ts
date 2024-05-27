@@ -1,5 +1,4 @@
-import { Usuario } from "@prisma/client";
-import { UserData, UserResponse } from "../types/user";
+import { AuthData, UserPayload, UserResponse } from "../types/user";
 import { prisma } from "../config/prisma";
 import { HttpException } from "../utils/HttpException";
 import { CODE } from "../utils/constants";
@@ -10,8 +9,8 @@ import {
 } from "../utils/authHandler";
 
 class UserService {
-	public findByEmail = async (email: UserData["email"]) => {
-		const user: Usuario | null = await prisma.usuario.findUnique({
+	public findByEmail = async (email: AuthData["email"]) => {
+		const user = await prisma.usuario.findUnique({
 			where: { email }
 		});
 
@@ -22,7 +21,7 @@ class UserService {
 		return true;
 	};
 
-	public createUser = async (data: UserData) => {
+	public createUser = async (data: AuthData) => {
 		const userExists = await this.findByEmail(data.email);
 
 		if (userExists) {
@@ -33,7 +32,14 @@ class UserService {
 
 		const newUser: UserResponse = await prisma.usuario.create({
 			data,
-			select: { id: true, email: true, rol: true }
+			select: {
+				id: true,
+				email: true,
+				apellido: true,
+				nombre: true,
+				dni: true,
+				rol: true
+			}
 		});
 
 		if (!newUser) {
@@ -43,7 +49,7 @@ class UserService {
 		return newUser;
 	};
 
-	public login = async (data: UserData) => {
+	public login = async (data: AuthData) => {
 		const userFound = await prisma.usuario.findUnique({
 			where: { email: data.email }
 		});
@@ -64,10 +70,11 @@ class UserService {
 			);
 		}
 
-		const payload: UserResponse = {
+		const payload: UserPayload = {
 			id: userFound.id,
 			email: userFound.email,
-			rol: userFound.rol
+			rol: userFound.rol,
+			dni: userFound.dni
 		};
 
 		const token = generateJwt(payload);
