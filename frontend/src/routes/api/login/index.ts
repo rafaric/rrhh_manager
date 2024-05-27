@@ -7,7 +7,7 @@ interface RegisterUser {
 export const onRequest: RequestHandler = async ({ request, json, cookie }) => {
   const body: RegisterUser = await request.json();
   try {
-    const res = await fetch("http://localhost:3000/api/v1/users/register", {
+    const res = await fetch("http://localhost:3000/api/v1/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -16,7 +16,7 @@ export const onRequest: RequestHandler = async ({ request, json, cookie }) => {
     });
     const data = await res.json();
 
-    if (data && res.status === 201) {
+    if (data && res.status === 200) {
       cookie.set("user_login", data.data.id, { path: "/" });
     }
     json(res.status, data);

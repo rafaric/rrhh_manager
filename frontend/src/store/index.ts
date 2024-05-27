@@ -1,16 +1,18 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 interface Store {
-  user: string;
+  user: {};
+  setUser: (newUser: {}) => void;
 }
 export const useAppStore = create(
   persist<Store>(
-    (set, get) => ({
+    (set) => ({
       user: "user",
+      setUser: (newUser) => set({ user: newUser }),
     }),
     {
       name: "rrhh_store",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );
