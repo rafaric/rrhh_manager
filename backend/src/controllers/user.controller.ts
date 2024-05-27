@@ -33,7 +33,6 @@ class UserController {
 			const id = String(req.user?.id);
 			const user = await UserService.getById(id);
 			res.status(CODE.OK).json(user);
-			console.log(user);
 		} catch (error) {
 			errorMessage(res, error);
 		}
