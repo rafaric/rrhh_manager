@@ -8,7 +8,7 @@ class CompanyServices {
     try {
       const newCompany = await prisma.empresa.create({
         data,
-        select: { id: true, name: true, ruc: true },
+        select: { id: true, name: true, cuit: true, email: true, sector: true },
       });
       return newCompany;
     } catch (error) {
@@ -19,7 +19,7 @@ class CompanyServices {
   public getCompanies = async () => {
     try {
       const companies = await prisma.empresa.findMany({
-        select: { id: true, name: true, ruc: true },
+        include: { usuarios: true },
       });
       return companies;
     } catch (error) {
@@ -34,7 +34,7 @@ class CompanyServices {
     try {
       const company = await prisma.empresa.findUnique({
         where: { id },
-        select: { id: true, name: true, ruc: true },
+        include: { usuarios: true },
       });
       return company;
     } catch (error) {
@@ -50,7 +50,6 @@ class CompanyServices {
       const company = await prisma.empresa.update({
         where: { id },
         data,
-        select: { id: true, name: true, ruc: true },
       });
       return company;
     } catch (error) {
