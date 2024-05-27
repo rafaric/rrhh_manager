@@ -1,4 +1,4 @@
-import { AuthData, UserPayload, UserResponse } from "../types/user";
+import { AuthData, UserPayload } from "../types/user";
 import { prisma } from "../config/prisma";
 import { HttpException } from "../utils/HttpException";
 import { CODE } from "../utils/constants";
@@ -30,7 +30,7 @@ class UserService {
 
 		data.password = await hashPassword(data.password);
 
-		const newUser: UserResponse = await prisma.usuario.create({
+		const newUser = await prisma.usuario.create({
 			data,
 			select: {
 				id: true,
