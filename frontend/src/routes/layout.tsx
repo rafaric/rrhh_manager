@@ -1,30 +1,23 @@
 import { component$, Slot } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
-import type { RequestHandler } from "@builder.io/qwik-city";
+import { routeLoader$, useLocation } from "@builder.io/qwik-city";
 import { Sidebar } from "~/components/Sidebar";
 
-export const onGet: RequestHandler = async ({ cacheControl }) => {
-  // Control caching for this request for best performance and to reduce hosting costs:
-  // https://qwik.dev/docs/caching/
-  cacheControl({
-    // Always serve a cached response by default, up to a week stale
-    staleWhileRevalidate: 60 * 60 * 24 * 7,
-    // Max once every 5 seconds, revalidate on the server to get a fresh version of this page
-    maxAge: 5,
-  });
-};
-
-export const useServerTimeLoader = routeLoader$(() => {
-  return {
-    date: new Date().toISOString(),
-  };
+export const useCheckToken = routeLoader$(({ cookie, redirect, pathname }) => {
+  if (cookie.get("user_login") && pathname.includes("auth")) {
+    throw redirect(301, "/");
+  }
+  if (!cookie.get("user_login") && !pathname.includes("auth")) {
+    throw redirect(301, "/auth/registro");
+  }
 });
 
 export default component$(() => {
+  const { url } = useLocation();
+
   return (
     <>
-      <main class="font-ZenMaru flex">
-        <Sidebar />
+      <main class="flex font-ZenMaru">
+        {!url.pathname.includes("auth") && <Sidebar />}
         <Slot />
       </main>
     </>
