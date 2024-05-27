@@ -30,17 +30,17 @@ model Usuario {
 }
 
 model Empresa {
-  id      String    @id @default(uuid()) @db.Uuid
-  address String
-  name    String
-  city    String
-  country String
-  cuit    Int       @unique
-  email   String
-  phone   String
-  sector  String
-  webSite String?
-  Usuario Usuario[]
+  id       String    @id @default(uuid()) @db.Uuid
+  name     String
+  cuit     Int       @unique
+  webSite  String?
+  city     String
+  country  String
+  address  String
+  phone    String
+  email    String
+  sector   String
+  usuarios Usuario[]
 }
 
 model Contrato {
