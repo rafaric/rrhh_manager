@@ -19,21 +19,20 @@ export const LoginForm = qwikify$(
     const [isLoadind, setIsLoadind] = useState(false);
 
     const setUser = useAppStore((state) => state.setUser);
-    const [messageError, setMessageError] = useState("");
+    const [messageResponse, setMessageResponse] = useState("");
     const onSubmit: SubmitHandler<LoginForm> = async (inputData) => {
       setIsLoadind(true);
-
       try {
         const res = await fetch(`/api/login`, {
           method: "POST",
           body: JSON.stringify(inputData),
         });
-        const { data, message } = await res.json();
-        if (res.status === 200) {
+        const data = await res.json();
+        if (res.status === 202) {
           setUser(data);
           location.reload();
         } else {
-          setMessageError(message);
+          setMessageResponse(data);
         }
       } catch (error) {
         console.log(error);
@@ -46,7 +45,9 @@ export const LoginForm = qwikify$(
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-rows-1 gap-3"
       >
-        <p className="text-center font-semibold text-[#f00]">{messageError}</p>
+        <p className="text-center font-semibold text-[#f00]">
+          {messageResponse}
+        </p>
         <label className="rounded-xl border border-primary px-3 py-1">
           <p className="text-xs text-primary">Email</p>
           <input

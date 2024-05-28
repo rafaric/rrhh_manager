@@ -7,7 +7,7 @@ interface Store {
 export const useAppStore = create(
   persist<Store>(
     (set) => ({
-      user: "user",
+      user: {},
       setUser: (newUser) => set({ user: newUser }),
     }),
     {
