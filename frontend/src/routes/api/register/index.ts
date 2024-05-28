@@ -4,8 +4,10 @@ interface RegisterUser {
   email: string;
   password: string;
 }
-export const onRequest: RequestHandler = async ({ request, json, cookie }) => {
+export const onRequest: RequestHandler = async ({ request, json }) => {
   const body: RegisterUser = await request.json();
+  console.log(body);
+
   try {
     const res = await fetch("http://localhost:3000/api/v1/users/register", {
       method: "POST",
@@ -14,12 +16,8 @@ export const onRequest: RequestHandler = async ({ request, json, cookie }) => {
       },
       body: JSON.stringify(body),
     });
-    const data = await res.json();
-
-    if (data && res.status === 201) {
-      cookie.set("user_login", data.data.id, { path: "/" });
-    }
-    json(res.status, data);
+    const { message } = await res.json();
+    json(res.status, message);
   } catch (error) {
     console.log(error);
   }

@@ -3,11 +3,13 @@ import { qwikify$ } from "@builder.io/qwik-react";
 import { useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import { useAppStore } from "~/store";
 
 type RegisterForm = {
   email: string;
   password: string;
+  nombre: string;
+  apellido: string;
+  dni: number;
 };
 export const RegisterForm = qwikify$(
   () => {
@@ -17,8 +19,7 @@ export const RegisterForm = qwikify$(
       formState: { errors },
     } = useForm<RegisterForm>();
     const [isLoadind, setIsLoadind] = useState(false);
-    const setUser = useAppStore((state) => state.setUser);
-    const [messageError, setMessageError] = useState("");
+    const [messageResponse, setMessageResponse] = useState("");
     const onSubmit: SubmitHandler<RegisterForm> = async (inputData) => {
       setIsLoadind(true);
       try {
@@ -26,12 +27,11 @@ export const RegisterForm = qwikify$(
           method: "POST",
           body: JSON.stringify(inputData),
         });
-        const { data, message } = await res.json();
+        const message = await res.json();
         if (res.status === 201) {
-          setUser(data);
-          location.reload();
+          location.pathname = "/auth/iniciar-sesion";
         } else {
-          setMessageError(message);
+          setMessageResponse(message);
         }
       } catch (error) {
         console.log(error);
@@ -44,7 +44,59 @@ export const RegisterForm = qwikify$(
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-rows-1 gap-3"
       >
-        <p className="text-center font-semibold text-[#f00]">{messageError}</p>
+        <p className="text-center font-semibold text-[#f00]">
+          {messageResponse}
+        </p>
+        <label className="rounded-xl border border-primary px-3 py-1">
+          <p className="text-xs text-primary">Nombre</p>
+          <input
+            className="w-full outline-none"
+            {...register("nombre", {
+              required: {
+                value: true,
+                message: "El Nombre es obligatorio",
+              },
+            })}
+          />
+          <p className="h-4 text-xs text-primary900">
+            {" "}
+            {errors.nombre?.message}
+          </p>
+        </label>
+        <label className="rounded-xl border border-primary px-3 py-1">
+          <p className="text-xs text-primary">Apellido</p>
+          <input
+            className="w-full outline-none"
+            {...register("apellido", {
+              required: {
+                value: true,
+                message: "El Apellido es obligatorio",
+              },
+            })}
+          />
+          <p className="h-4 text-xs text-primary900">
+            {" "}
+            {errors.apellido?.message}
+          </p>
+        </label>
+        <label className="rounded-xl border border-primary px-3 py-1">
+          <p className="text-xs text-primary">DNI</p>
+          <input
+            className="w-full outline-none"
+            {...register("dni", {
+              required: {
+                value: true,
+                message: "El DNI es obligatorio",
+              },
+              setValueAs: (v) => parseInt(v),
+              validate: {
+                isNumber: (value) =>
+                  !isNaN(value) || "El valor debe ser un número",
+              },
+            })}
+          />
+          <p className="h-4 text-xs text-primary900"> {errors.dni?.message}</p>
+        </label>
         <label className="rounded-xl border border-primary px-3 py-1">
           <p className="text-xs text-primary">Email</p>
           <input
@@ -60,7 +112,10 @@ export const RegisterForm = qwikify$(
               },
             })}
           />
-          <p className="text-xs text-primary900"> {errors.email?.message}</p>
+          <p className="texh-4-primary900 h-3 text-xs">
+            {" "}
+            {errors.email?.message}
+          </p>
         </label>
         <label className="rounded-xl border border-primary px-3 py-1">
           <p className="text-xs text-primary">Contraseña</p>
@@ -78,7 +133,9 @@ export const RegisterForm = qwikify$(
               },
             })}
           />
-          <p className="text-xs text-primary900">{errors.password?.message}</p>
+          <p className="h-4 text-xs text-primary900">
+            {errors.password?.message}
+          </p>
         </label>
         <button
           className="btn text-white rounded-xl bg-primary p-3 text-[#fff]"
