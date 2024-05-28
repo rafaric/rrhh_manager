@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,67 +8,73 @@ datasource db {
 }
 
 model Usuario {
-  id        String     @id @default(uuid()) @db.Uuid
-  email     String     @unique
-  password  String
-  rol       Role       @default(USER)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Empleado  Empleado[]
+  id                   String             @id @default(uuid()) @db.Uuid
+  email                String             @unique
+  password             String
+  rol                  Role               @default(USER)
+  nombre               String
+  apellido             String
+  dni                  Int                @unique
+  telefono             String?
+  direccion            String?
+  ciudad               String?
+  codigo_postal        String?
+  contrato_id          String?            @db.Uuid
+  empresa_id           String?            @db.Uuid
+  solicitudLicencia_id String?            @db.Uuid
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  contrato             Contrato?          @relation(fields: [contrato_id], references: [id])
+  empresa              Empresa?           @relation(fields: [empresa_id], references: [id])
+  solicitud            SolicitudLicencia? @relation(fields: [solicitudLicencia_id], references: [id])
+}
+
+model Empresa {
+  id      String    @id @default(uuid()) @db.Uuid
+  name    String
+  cuit    Int       @unique
+  webSite String?
+  city    String
+  country String
+  address String
+  phone   String
+  email   String
+  sector  String
+  Usuario Usuario[]
+}
+
+model Contrato {
+  id           String    @id @default(uuid()) @db.Uuid
+  salario      Float
+  descripcion  String
+  cargo_id     String    @db.Uuid
+  fecha_inicio DateTime  @default(now())
+  fecha_fin    DateTime
+  cargo        Cargo     @relation(fields: [cargo_id], references: [id])
+  Usuario      Usuario[]
+}
+
+model SolicitudLicencia {
+  id           String    @id @default(uuid()) @db.Uuid
+  estado       Estado
+  motivo       String
+  tipo         Tipo
+  fecha_inicio DateTime  @default(now())
+  fecha_fin    DateTime
+  Usuario      Usuario[]
+}
+
+model Cargo {
+  id          String     @id @default(uuid()) @db.Uuid
+  nombre      String
+  descripcion String
+  Contrato    Contrato[]
 }
 
 enum Role {
   ADMIN
   EMPLEADO
   USER
-}
-
-model Empleado {
-  id                   String            @id @default(uuid()) @db.Uuid
-  nombre               String
-  apellido             String
-  dni                  Int               @unique
-  telefono             String
-  direccion            String
-  ciudad               String
-  codigo_postal        String
-  usuario              Usuario           @relation(fields: [usuario_id], references: [id])
-  usuario_id           String            @db.Uuid
-  contrato             Contrato          @relation(fields: [contrato_id], references: [id])
-  contrato_id          String            @db.Uuid
-  empresa              Empresa           @relation(fields: [empresa_id], references: [id])
-  empresa_id           String            @db.Uuid
-  solicitud            SolicitudLicencia @relation(fields: [solicitudLicencia_id], references: [id])
-  solicitudLicencia_id String            @db.Uuid
-}
-
-model Empresa {
-  id       String     @id @default(uuid()) @db.Uuid
-  name     String
-  ruc      Int        @unique
-  address  String
-  Empleado Empleado[]
-}
-
-model Contrato {
-  id           String     @id @default(uuid()) @db.Uuid
-  salario      Float
-  descripcion  String
-  Empleado     Empleado[]
-  cargo        Cargo      @relation(fields: [cargo_id], references: [id])
-  cargo_id     String     @db.Uuid
-  fecha_inicio DateTime   @default(now())
-  fecha_fin    DateTime
-}
-
-model SolicitudLicencia {
-  id           String     @id @default(uuid()) @db.Uuid
-  estado       Estado
-  motivo       String
-  tipo         Tipo
-  fecha_inicio DateTime   @default(now())
-  fecha_fin    DateTime
-  Empleado     Empleado[]
 }
 
 enum Estado {
@@ -85,11 +85,4 @@ enum Estado {
 enum Tipo {
   VACACIONES
   ENFERMEDAD
-}
-
-model Cargo {
-  id          String     @id @default(uuid()) @db.Uuid
-  nombre      String
-  descripcion String
-  Contrato    Contrato[]
 }

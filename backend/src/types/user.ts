@@ -1,5 +1,13 @@
 import { Usuario } from "@prisma/client";
 
-export type UserData = Pick<Usuario, "email" | "password">;
+export type AuthData = Pick<
+	Usuario,
+	"email" | "password" | "nombre" | "apellido" | "dni"
+>;
 
-export type UserResponse = Pick<Usuario, "id" | "email" | "rol">;
+export type UserResponse = Pick<
+	Usuario,
+	"id" | "email" | "nombre" | "apellido" | "dni" | "rol"
+>;
+
+export type UserPayload = Pick<Usuario, "id" | "email" | "rol" | "dni">;

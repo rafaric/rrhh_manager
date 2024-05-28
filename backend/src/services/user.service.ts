@@ -1,5 +1,4 @@
-import { Usuario } from "@prisma/client";
-import { UserData, UserResponse } from "../types/user";
+import { AuthData, UserPayload } from "../types/user";
 import { prisma } from "../config/prisma";
 import { HttpException } from "../utils/HttpException";
 import { CODE } from "../utils/constants";
@@ -10,8 +9,8 @@ import {
 } from "../utils/authHandler";
 
 class UserService {
-	public findByEmail = async (email: UserData["email"]) => {
-		const user: Usuario | null = await prisma.usuario.findUnique({
+	public findByEmail = async (email: AuthData["email"]) => {
+		const user = await prisma.usuario.findUnique({
 			where: { email }
 		});
 
@@ -22,7 +21,20 @@ class UserService {
 		return true;
 	};
 
-	public createUser = async (data: UserData) => {
+	public getById = async (id: UserPayload["id"]) => {
+		const user = await prisma.usuario.findUnique({
+			where: { id },
+			include: { contrato: true, empresa: true, solicitud: true }
+		});
+
+		if (!user) {
+			throw new HttpException(CODE.NOT_FOUND, "Usuario no Existe");
+		}
+
+		return user;
+	};
+
+	public createUser = async (data: AuthData) => {
 		const userExists = await this.findByEmail(data.email);
 
 		if (userExists) {
@@ -31,9 +43,16 @@ class UserService {
 
 		data.password = await hashPassword(data.password);
 
-		const newUser: UserResponse = await prisma.usuario.create({
+		const newUser = await prisma.usuario.create({
 			data,
-			select: { id: true, email: true, rol: true }
+			select: {
+				id: true,
+				email: true,
+				apellido: true,
+				nombre: true,
+				dni: true,
+				rol: true
+			}
 		});
 
 		if (!newUser) {
@@ -43,7 +62,7 @@ class UserService {
 		return newUser;
 	};
 
-	public login = async (data: UserData) => {
+	public login = async (data: AuthData) => {
 		const userFound = await prisma.usuario.findUnique({
 			where: { email: data.email }
 		});
@@ -64,10 +83,11 @@ class UserService {
 			);
 		}
 
-		const payload: UserResponse = {
+		const payload: UserPayload = {
 			id: userFound.id,
 			email: userFound.email,
-			rol: userFound.rol
+			rol: userFound.rol,
+			dni: userFound.dni
 		};
 
 		const token = generateJwt(payload);

@@ -27,6 +27,16 @@ class UserController {
 			errorMessage(res, error);
 		}
 	};
+
+	public getSession = async (req: Request, res: Response) => {
+		try {
+			const id = String(req.user?.id);
+			const user = await UserService.getById(id);
+			res.status(CODE.OK).json(user);
+		} catch (error) {
+			errorMessage(res, error);
+		}
+	};
 }
 
 export default new UserController();

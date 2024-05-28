@@ -16,3 +16,9 @@ export enum CODE {
 	ACCEPTED = 202,
 	NOT_MODIFIED = 304
 }
+
+export enum ROLE {
+	USER = "USER",
+	EMPLEADO = "EMPLEADO",
+	ADMIN = "ADMIN"
+}
