@@ -15,11 +15,9 @@ export default component$(() => {
   const { url } = useLocation();
 
   return (
-    <>
-      <main class="flex font-ZenMaru">
-        {!url.pathname.includes("auth") && <Sidebar />}
-        <Slot />
-      </main>
-    </>
+    <main class="flex font-ZenMaru">
+      {!url.pathname.includes("auth") && <Sidebar />}
+      <Slot />
+    </main>
   );
 });
