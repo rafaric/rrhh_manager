@@ -6,10 +6,10 @@ export default component$(() => {
 
 
     return (
-        <section class="w-full bg-light text-primary">
+        <section class="w-full bg-gray text-primary">
             {/* <h2 class="font-bold">DATOS DE EMPRESA</h2> */}
             <article class="m-4 p-4">
-                <CompanyData  />
+                <CompanyData />
             </article>
         </section>
     );

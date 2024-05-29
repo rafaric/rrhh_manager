@@ -1,141 +1,66 @@
-// src/components/EditCompanyForm.tsx
-import { component$, useStore } from '@builder.io/qwik';
-import { Form, z, zx } from '@builder.io/qwik-city';
+/** @jsxImportSource react */
+import { qwikify$ } from "@builder.io/qwik-react";
+import { useState } from "react";
+import type { SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form"
 
-interface CompanyData {
-    nombre: string;
-    direccion: string;
-    telefono: number;
+type CompanyForm = {
+    name: string;
+    cuit: number;
+    webSite: string;
+    city: string;
+    country: string;
+    address: string;
+    phone: string;
     email: string;
-    rubro: string;
-}
+    sector: string;
+};
 
-export const schema = z.object({
-    nombre: z.string().min(1, 'El nombre es requerido'),
-    direccion: z.string().min(1, 'La dirección es requerida'),
-    telefono: z.string().min(1, 'El teléfono es requerido'),
-    email: z.string().email('El correo electrónico no es válido'),
-    rubro: z.string().min(1, 'El rubro es requerido'),
-});
-
-export default component$(() => {
-    const store = useStore<CompanyData>({
-        nombre: '',
-        direccion: '',
-        telefono: 1154781122,
-        email: '',
-        rubro: '',
-    });
-
-    const handleSubmit = async (event: SubmitEvent) => {
-        event.preventDefault();
-
-        // Aquí enviarías los datos a la API externa
-        const response = await fetch('/api/empresa', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(store),
-        });
-
-        if (response.ok) {
-            // Redirecciona a la vista de CompanyCard después de enviar los datos
-            window.location.href = '/datos-empresa';
-        } else {
-            console.error('Error al enviar los datos');
+export const CompanyForm = qwikify$(() => {
+    const { handleSubmit, register, formState: { errors }, } = useForm<CompanyForm>()
+    const [isLoading, setIsLoading] = useState(false)
+    const [messageRes, setMessageRes] = useState("")
+    const onSubmit: SubmitHandler<CompanyForm> = async (data) => {
+        setIsLoading(true)
+        try {
+            const response = await fetch('/api/company', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            })
+            const message = await response.json()
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsLoading(false)
         }
-    };
-
+    }
     return (
-        <Form
-            action="/api/empresa"
-            method="post"
-            onSubmit$={handleSubmit}
-            class="max-w-md mx-auto"
-            schema={schema}
+        <form onSubmit={handleSubmit(onSubmit)}
+            className="grid grid-rows-1 gap-3"
         >
-            <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2" for="nombre">
-                    Nombre
-                </label>
+            <p className="text-center font-semibold text-[#f00]">
+                {messageRes}
+            </p>
+            <label className="ounded-xl border border-primary px-3 py-1">
+                <p className="text-xs text-primary"> Nombre </p>
                 <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="nombre"
-                    type="text"
-                    bind:value={store.nombre}
-                    placeholder="Nombre de la empresa"
+                    className="w-full outline-none"
+                    {...register("name", {
+                        required: {
+                            value: true,
+                            message: "El Nombre es obligatorio",
+                        },
+                    })}
                 />
-                <Form.Error nombre="nombre" />
-            </div>
+                <p className="h-4 text-xs text-primary900">
+                    {" "}
+                    {errors.name?.message}
+                </p>
+            </label>
 
-            <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2" for="direccion">
-                    Dirección
-                </label>
-                <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="direccion"
-                    type="text"
-                    bind:value={store.direccion}
-                    placeholder="Dirección de la empresa"
-                />
-                <Form.Error nombre="direccion" />
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2" for="phone">
-                    Teléfono
-                </label>
-                <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="phone"
-                    type="text"
-                    bind:value={store.phone}
-                    placeholder="Teléfono de la empresa"
-                />
-                <Form.Error nombre="phone" />
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2" for="email">
-                    Correo electrónico
-                </label>
-                <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="email"
-                    type="email"
-                    bind:value={store.email}
-                    placeholder="Correo electrónico de la empresa"
-                />
-                <Form.Error nombre="email" />
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-gray-700 font-bold mb-2" for="rubro">
-                    Rubro
-                </label>
-                <input
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="rubro"
-                    type="text"
-                    bind:value={store.rubro}
-                    placeholder="Rubro de la empresa"
-                />
-                <Form.Error nombre="rubro" />
-            </div>
-
-            <div class="flex items-center justify-between">
-                <button
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="submit"
-                >
-                    Guardar cambios
-                </button>
-            </div>
-        </Form>
-    );
-});
-
-
+        </form>
+    )
+},
+    { eagerness: "load" }
+)
 
