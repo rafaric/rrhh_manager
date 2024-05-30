@@ -29,9 +29,12 @@ class CompanyController {
     }
   };
 
-  public getCompany = async (req: Request<Params>, res: Response) => {
+  public getCompany = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
+      if (!id) {
+        return res.status(CODE.BAD_REQUEST).json({ error: "ID is required" });
+      }
 
       const response = await CompanyServices.getCompany(id);
       if (!response) {

@@ -2,6 +2,7 @@ import { Router } from "express";
 import CompanyController from "../controllers/company.controller";
 import { body } from "express-validator";
 import { HandleInputErrors } from "../middlewares/validationInput";
+import { isAdmin } from "../middlewares/validateAdmin";
 
 const router: Router = Router();
 
@@ -22,11 +23,12 @@ router.post(
   body("sector").isString().notEmpty().withMessage("Sector no válido"),
 
   HandleInputErrors,
+  isAdmin,
   CompanyController.create
 );
 
-router.get("/", CompanyController.getCompanies);
-router.get("/:id", CompanyController.getCompany);
+router.get("/", isAdmin, CompanyController.getCompanies);
+router.get("/:id", isAdmin, CompanyController.getCompany);
 
 router.patch(
   "/:id",
@@ -46,6 +48,7 @@ router.patch(
   body("sector").isString().optional().withMessage("Sector no válido"),
 
   HandleInputErrors,
+  isAdmin,
   CompanyController.updateCompany
 );
 
