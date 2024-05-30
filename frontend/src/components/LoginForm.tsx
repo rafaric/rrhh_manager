@@ -63,7 +63,10 @@ export const LoginForm = qwikify$(
               },
             })}
           />
-          <p className="text-xs text-primary900"> {errors.email?.message}</p>
+          <p className="h-4 text-xs text-primary900">
+            {" "}
+            {errors.email?.message}
+          </p>
         </label>
         <label className="rounded-xl border border-primary px-3 py-1">
           <p className="text-xs text-primary">Contraseña</p>
@@ -81,7 +84,9 @@ export const LoginForm = qwikify$(
               },
             })}
           />
-          <p className="text-xs text-primary900">{errors.password?.message}</p>
+          <p className="h-4 text-xs text-primary900">
+            {errors.password?.message}
+          </p>
         </label>
         <button
           className="btn text-white rounded-xl bg-primary p-3 text-[#fff]"
