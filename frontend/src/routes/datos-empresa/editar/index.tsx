@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik"
 import type { DocumentHead } from "@builder.io/qwik-city";
-import CompanyEditForm from "~/components/Company/CompanyEditForm";
+import { CompanyEditForm } from "~/components/Company/CompanyEditForm";
 
 export default component$(() => {
 
