@@ -8,25 +8,24 @@ datasource db {
 }
 
 model Usuario {
-  id                   String              @id @default(uuid()) @db.Uuid
-  email                String              @unique
-  password             String
-  rol                  Role                @default(USER)
-  nombre               String
-  apellido             String
-  dni                  Int                 @unique
-  telefono             String?
-  direccion            String?
-  ciudad               String?
-  codigo_postal        String?
-  contrato_id          String?             @db.Uuid
-  empresa_id           String?             @db.Uuid
-  solicitudLicencia_id String?             @db.Uuid
-  createdAt            DateTime            @default(now())
-  updatedAt            DateTime            @updatedAt
-  contrato             Contrato?           @relation(fields: [contrato_id], references: [id])
-  empresa              Empresa?            @relation(fields: [empresa_id], references: [id])
-  solicitudesLicencia  SolicitudLicencia[]
+  id                  String              @id @default(uuid()) @db.Uuid
+  email               String              @unique
+  password            String
+  rol                 Role                @default(USER)
+  nombre              String
+  apellido            String
+  dni                 Int                 @unique
+  telefono            String?
+  direccion           String?
+  ciudad              String?
+  codigo_postal       String?
+  contrato_id         String?             @db.Uuid
+  empresa_id          String?             @db.Uuid
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  contrato            Contrato?           @relation(fields: [contrato_id], references: [id])
+  empresa             Empresa?            @relation(fields: [empresa_id], references: [id])
+  solicitudesLicencia SolicitudLicencia[]
 }
 
 model Empresa {
