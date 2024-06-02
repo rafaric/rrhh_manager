@@ -46,10 +46,11 @@ model Contrato {
   id           String    @id @default(uuid()) @db.Uuid
   salario      Float
   descripcion  String
-  cargo_id     String    @db.Uuid
   fecha_inicio DateTime  @default(now())
   fecha_fin    DateTime
   cargo        Cargo     @relation(fields: [cargo_id], references: [id])
+  cargo_id     String    @db.Uuid
+  status       Status    @default(ACTIVO)
   Usuario      Usuario[]
 }
 
@@ -60,22 +61,26 @@ model SolicitudLicencia {
   tipo         Tipo
   fecha_inicio DateTime @default(now())
   fecha_fin    DateTime
-
-  Usuario   Usuario? @relation(fields: [usuarioId], references: [id])
-  usuarioId String?  @db.Uuid
+  Usuario      Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioId    String?  @db.Uuid
 }
 
 model Cargo {
   id          String     @id @default(uuid()) @db.Uuid
   nombre      String
   descripcion String
-  Contrato    Contrato[]
+  contrato    Contrato[]
 }
 
 enum Role {
   ADMIN
   EMPLEADO
   USER
+}
+
+enum Status {
+  ACTIVO
+  INACTIVO
 }
 
 enum Estado {
