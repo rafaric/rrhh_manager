@@ -8,8 +8,11 @@ import { decode } from "punycode";
 class LicenseApplicationController {
   public create = async (req: Request, res: Response) => {
     try {
-      const { body } = req;
-      const response = await licenseAplicationServices.createLicense(body);
+      const { body, user } = req;
+      const response = await licenseAplicationServices.createLicense(
+        body,
+        user
+      );
       res
         .status(CODE.CREATED)
         .json({ data: response, message: "Solicitud Creada Correctamente" });
@@ -19,8 +22,6 @@ class LicenseApplicationController {
   };
 
   public getLicenses = async (req: Request, res: Response) => {
-    const { body, user } = req;
-    console.log(user);
     try {
       const response = await licenseAplicationServices.getAllLicenses();
       res.status(CODE.OK).json({ data: response });
@@ -29,9 +30,11 @@ class LicenseApplicationController {
     }
   };
 
-  public getMyLicenses = async (_: Request, res: Response) => {
+  public getMyLicenses = async (req: Request, res: Response) => {
+    const { user } = req;
+
     try {
-      const response = await licenseAplicationServices.getMyLicenses();
+      const response = await licenseAplicationServices.getMyLicenses(user);
       res.status(CODE.OK).json({ data: response });
     } catch (error) {
       errorMessage(res, error);
