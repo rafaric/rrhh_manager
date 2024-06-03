@@ -19,11 +19,10 @@ model Usuario {
   direccion           String?
   ciudad              String?
   codigo_postal       String?
-  contrato_id         String?             @db.Uuid
   empresa_id          String?             @db.Uuid
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @updatedAt
-  contrato            Contrato?           @relation(fields: [contrato_id], references: [id])
+  contrato            Contrato[]
   empresa             Empresa?            @relation(fields: [empresa_id], references: [id])
   solicitudesLicencia SolicitudLicencia[]
 }
@@ -43,15 +42,16 @@ model Empresa {
 }
 
 model Contrato {
-  id           String    @id @default(uuid()) @db.Uuid
+  id           String   @id @default(uuid()) @db.Uuid
   salario      Float
   descripcion  String
-  fecha_inicio DateTime  @default(now())
+  fecha_inicio DateTime @default(now())
   fecha_fin    DateTime
-  cargo        Cargo     @relation(fields: [cargo_id], references: [id])
-  cargo_id     String    @db.Uuid
-  status       Status    @default(ACTIVO)
-  Usuario      Usuario[]
+  status       Status   @default(ACTIVO)
+  Cargo        Cargo?   @relation(fields: [cargoId], references: [id])
+  cargoId      String?  @db.Uuid
+  Usuario      Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioId    String?  @db.Uuid
 }
 
 model SolicitudLicencia {

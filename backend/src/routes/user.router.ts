@@ -66,7 +66,8 @@ router.put(
 		.optional()
 		.isString()
 		.withMessage('La ciudad debe ser un string'),
-	HandleInputErrors
+	HandleInputErrors,
+	UserController.update
 );
 
 router.get('/', isLogged, UserController.getSession);

@@ -6,9 +6,8 @@ import { CODE } from '../utils/constants';
 class ContractController {
 	public create = async (req: Request, res: Response) => {
 		try {
-			const { id } = req.params;
 			const { body } = req;
-			const newContract = await ContractService.create(id!, body);
+			const newContract = await ContractService.create(body);
 			res
 				.status(CODE.CREATED)
 				.json({ data: newContract, message: 'Contrato Creado' });

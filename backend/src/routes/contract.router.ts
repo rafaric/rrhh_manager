@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ContractController from '../controllers/contract.controller';
-import { body, param } from 'express-validator';
+import { body } from 'express-validator';
 import { HandleInputErrors } from '../middlewares/validationInput';
 import { isAdmin } from '../middlewares/validateAdmin';
 
@@ -9,8 +9,12 @@ const router: Router = Router();
 router.use(isAdmin);
 
 router.post(
-	'/:id',
-	param('id').isUUID().withMessage('ID no valido'),
+	'/',
+	body('usuarioId')
+		.notEmpty()
+		.withMessage('El usuario_id no puede ir vació')
+		.isUUID()
+		.withMessage('ID no valido'),
 	body('salario')
 		.notEmpty()
 		.isInt()
@@ -19,7 +23,7 @@ router.post(
 		.notEmpty()
 		.isString()
 		.withMessage('La descripcion debe ser un string'),
-	body('cargo_id')
+	body('cargoId')
 		.notEmpty()
 		.isUUID()
 		.withMessage('El cargo_id debe ser UUID valido'),
