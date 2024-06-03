@@ -25,7 +25,11 @@ class UserService {
 	public getById = async (id: UserPayload['id']) => {
 		const user = await prisma.usuario.findUnique({
 			where: { id },
-			include: { contrato: true, empresa: true, solicitudesLicencia: true }
+			include: {
+				contrato: { where: { status: 'ACTIVO' } },
+				empresa: true,
+				solicitudesLicencia: true
+			}
 		});
 
 		if (!user) {

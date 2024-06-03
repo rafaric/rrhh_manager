@@ -25,6 +25,5 @@ export type UpdateData = Partial<
 		| 'empresa_id'
 		| 'telefono'
 		| 'dni'
-		| 'contrato_id'
 	>
 >;
