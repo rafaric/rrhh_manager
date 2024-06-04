@@ -19,3 +19,13 @@ export interface User {
   empresa?: string;
   solicitud?: string;
 }
+
+export interface Holiday {
+  id: string;
+  fecha: string;
+  descripcion: string;
+  estado: string;
+  usuario_id: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
