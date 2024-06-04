@@ -48,9 +48,9 @@ Run the server with npm run dev (development)
 
 **Only Admin -> header:{ JWT Admin }**
 
-| Type | Details       | Route                                 | Description                                                           |
-| :--- | :------------ | :------------------------------------ | :-------------------------------------------------------------------- |
-| POST | Register user | http://localhost:PORT/api/v1/contract | body : {usuarioId,salario,descripcion,cargoId,fecha_inicio,fecha_fin} |
+| Type | Details        | Route                                 | Description                                                           |
+| :--- | :------------- | :------------------------------------ | :-------------------------------------------------------------------- |
+| POST | Nuevo Contrato | http://localhost:PORT/api/v1/contract | body : {usuarioId,salario,descripcion,cargoId,fecha_inicio,fecha_fin} |
 
 ### Contract schema
 
