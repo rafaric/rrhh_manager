@@ -4,15 +4,16 @@ import ImageSearch from "../../../public/search-icon.svg?jsx";
 import ImageNotifications from "../../../public/notification.svg?jsx";
 
 import { MyProfile } from "./MyProfile";
+import { getSectionTitle } from "./GetSection";
 export const Header = component$(() => {
   const {
     url: { pathname },
   } = useLocation();
-  const title =
-    pathname.length > 1 ? pathname.replaceAll("/", "") : "Dashboard";
+  const title = getSectionTitle(pathname);
+
   return (
-    <header class="flex items-center justify-between p-4 ">
-      <h2 class="text-2xl font-bold capitalize">{title}</h2>
+    <header class="flex items-center justify-between px-4 py-8 ">
+      <h2 class="text-2xl font-bold ">{title}</h2>
       <div class="flex h-10 gap-2">
         <div class="flex items-center gap-2 rounded-xl border border-light p-1">
           <ImageSearch class="aspect-square w-4" />

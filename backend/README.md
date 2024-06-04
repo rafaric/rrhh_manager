@@ -77,9 +77,9 @@ Run the server with npm run dev (development)
 | :----- | :----------------- | :------------------------------------- | :------------------------------------------------------------------- |
 | GET    | Get All            | http://localhost:PORT/api/v1/cargo     | null , headers: {token}                                              |
 | POST   | Create Cargo       | http://localhost:PORT/api/v1/cargo     | body : { nombre, descripcion } , headers: {token}                    |
-| GET    | Get By Id          | http://localhost:PORT/api/v1/cargo/:id | param : { id(UUID), headers: {token} }                               |
-| PUT    | upgrade user by id | http://localhost:PORT/api/v1/users/:id | param : { id(UUID) }, body : {nombre, descripcion}, headers: {token} |
-| DELETE | upgrade user by id | http://localhost:PORT/api/v1/users/:id | param : { id(UUID) }, headers: {token}                               |
+| GET    | Get Cargo By Id    | http://localhost:PORT/api/v1/cargo/:id | param : { id(UUID), headers: {token} }                               |
+| PUT    | Update Cargo By Id | http://localhost:PORT/api/v1/cargo/:id | param : { id(UUID) }, body : {nombre, descripcion}, headers: {token} |
+| DELETE | Delete Cargo by id | http://localhost:PORT/api/v1/cargo/:id | param : { id(UUID) }, headers: {token}                               |
 
 ### Cargo schema
 
