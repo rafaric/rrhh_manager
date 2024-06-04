@@ -8,25 +8,23 @@ datasource db {
 }
 
 model Usuario {
-  id                   String             @id @default(uuid()) @db.Uuid
-  email                String             @unique
-  password             String
-  rol                  Role               @default(USER)
-  nombre               String
-  apellido             String
-  dni                  Int                @unique
-  telefono             String?
-  direccion            String?
-  ciudad               String?
-  codigo_postal        String?
-  contrato_id          String?            @db.Uuid
-  empresa_id           String?            @db.Uuid
-  solicitudLicencia_id String?            @db.Uuid
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
-  contrato             Contrato?          @relation(fields: [contrato_id], references: [id])
-  empresa              Empresa?           @relation(fields: [empresa_id], references: [id])
-  solicitud            SolicitudLicencia? @relation(fields: [solicitudLicencia_id], references: [id])
+  id                  String              @id @default(uuid()) @db.Uuid
+  email               String              @unique
+  password            String
+  rol                 Role                @default(USER)
+  nombre              String
+  apellido            String
+  dni                 Int                 @unique
+  telefono            String?
+  direccion           String?
+  ciudad              String?
+  codigo_postal       String?
+  empresa_id          String?             @db.Uuid
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  contrato            Contrato[]
+  empresa             Empresa?            @relation(fields: [empresa_id], references: [id])
+  solicitudesLicencia SolicitudLicencia[]
 }
 
 model Empresa {
@@ -44,31 +42,34 @@ model Empresa {
 }
 
 model Contrato {
-  id           String    @id @default(uuid()) @db.Uuid
+  id           String   @id @default(uuid()) @db.Uuid
   salario      Float
   descripcion  String
-  cargo_id     String    @db.Uuid
-  fecha_inicio DateTime  @default(now())
+  fecha_inicio DateTime @default(now())
   fecha_fin    DateTime
-  cargo        Cargo     @relation(fields: [cargo_id], references: [id])
-  Usuario      Usuario[]
+  status       Status   @default(ACTIVO)
+  Cargo        Cargo?   @relation(fields: [cargoId], references: [id])
+  cargoId      String?  @db.Uuid
+  Usuario      Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioId    String?  @db.Uuid
 }
 
 model SolicitudLicencia {
-  id           String    @id @default(uuid()) @db.Uuid
-  estado       Estado
+  id           String   @id @default(uuid()) @db.Uuid
+  estado       Estado   @default(PENDIENTE)
   motivo       String
   tipo         Tipo
-  fecha_inicio DateTime  @default(now())
+  fecha_inicio DateTime @default(now())
   fecha_fin    DateTime
-  Usuario      Usuario[]
+  Usuario      Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioId    String?  @db.Uuid
 }
 
 model Cargo {
   id          String     @id @default(uuid()) @db.Uuid
   nombre      String
   descripcion String
-  Contrato    Contrato[]
+  contrato    Contrato[]
 }
 
 enum Role {
@@ -77,9 +78,16 @@ enum Role {
   USER
 }
 
+enum Status {
+  ACTIVO
+  INACTIVO
+}
+
 enum Estado {
   PENDIENTE
   APROBADO
+  RECHAZADO
+  CANCELADO
 }
 
 enum Tipo {

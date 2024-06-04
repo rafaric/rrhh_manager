@@ -1,15 +1,16 @@
-import { AuthData, UserPayload } from "../types/user";
-import { prisma } from "../config/prisma";
-import { HttpException } from "../utils/HttpException";
-import { CODE } from "../utils/constants";
+import { AuthData, UpdateData, UserPayload } from '../types/user';
+import { prisma } from '../config/prisma';
+import { HttpException } from '../utils/HttpException';
+import { CODE } from '../utils/constants';
 import {
 	comparePassword,
 	generateJwt,
 	hashPassword
-} from "../utils/authHandler";
+} from '../utils/authHandler';
+import { Usuario } from '@prisma/client';
 
 class UserService {
-	public findByEmail = async (email: AuthData["email"]) => {
+	public findByEmail = async (email: AuthData['email']) => {
 		const user = await prisma.usuario.findUnique({
 			where: { email }
 		});
@@ -21,14 +22,18 @@ class UserService {
 		return true;
 	};
 
-	public getById = async (id: UserPayload["id"]) => {
+	public getById = async (id: UserPayload['id']) => {
 		const user = await prisma.usuario.findUnique({
 			where: { id },
-			include: { contrato: true, empresa: true, solicitud: true }
+			include: {
+				contrato: { where: { status: 'ACTIVO' } },
+				empresa: true,
+				solicitudesLicencia: true
+			}
 		});
 
 		if (!user) {
-			throw new HttpException(CODE.NOT_FOUND, "Usuario no Existe");
+			throw new HttpException(CODE.NOT_FOUND, 'Usuario no Existe');
 		}
 
 		return user;
@@ -38,7 +43,7 @@ class UserService {
 		const userExists = await this.findByEmail(data.email);
 
 		if (userExists) {
-			throw new HttpException(CODE.BAD_REQUEST, "El usuario ya existe");
+			throw new HttpException(CODE.BAD_REQUEST, 'El usuario ya existe');
 		}
 
 		data.password = await hashPassword(data.password);
@@ -56,7 +61,7 @@ class UserService {
 		});
 
 		if (!newUser) {
-			throw new HttpException(CODE.BAD_REQUEST, "No se pudo crear el usuario");
+			throw new HttpException(CODE.BAD_REQUEST, 'No se pudo crear el usuario');
 		}
 
 		return newUser;
@@ -70,7 +75,7 @@ class UserService {
 		if (!userFound) {
 			throw new HttpException(
 				CODE.UNAUTHORIZED_ACCESS,
-				"El email es incorrecto"
+				'El email es incorrecto'
 			);
 		}
 
@@ -79,7 +84,7 @@ class UserService {
 		if (!isPassword) {
 			throw new HttpException(
 				CODE.UNAUTHORIZED_ACCESS,
-				"La password es incorrecta"
+				'La password es incorrecta'
 			);
 		}
 
@@ -93,6 +98,24 @@ class UserService {
 		const token = generateJwt(payload);
 
 		return token;
+	};
+
+	public update = async (id: Usuario['id'], data: UpdateData) => {
+		const userFound = await this.getById(id);
+
+		const updatedUser = await prisma.usuario.update({
+			where: { id: userFound.id },
+			data
+		});
+
+		if (!updatedUser) {
+			throw new HttpException(
+				CODE.BAD_REQUEST,
+				'No se pudo actualizar el usuario'
+			);
+		}
+
+		return updatedUser;
 	};
 }
 
