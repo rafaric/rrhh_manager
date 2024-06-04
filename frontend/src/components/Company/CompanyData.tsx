@@ -1,4 +1,4 @@
-import { component$, useStore } from "@builder.io/qwik";
+import { $, component$, useStore } from "@builder.io/qwik";
 
 
 export const CompanyData = component$(() => {
@@ -28,7 +28,7 @@ export const CompanyData = component$(() => {
     })
 
     // const fetchCompanyData = async () => {
-    //     const response = await fetch('')
+    //     const response = await fetch('/api/company')
     //     const data = await response.json()
     //     Object.assign(store,data)
     // }
@@ -83,7 +83,7 @@ export const CompanyData = component$(() => {
                 </div>
                 <div class="mt-8 flex justify-center">
                     <a
-                        href="/datos-empresa/editar"
+                        href="/empresa/editar"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center"
                     >
                         <svg

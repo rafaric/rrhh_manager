@@ -1,4 +1,4 @@
-import { $, component$, NoSerialize, noSerialize, useStore } from "@builder.io/qwik"
+import { $, component$, useStore } from "@builder.io/qwik"
 
 type CompanyFields = {
     name: string
@@ -26,7 +26,7 @@ export const CompanyEditForm = component$(() => {
         sector: ""
     })
 
-    const handleSubmit = async (event: SubmitEvent) => {
+    const handleSubmit = $(async (event: SubmitEvent) => {
         event.preventDefault()
         try {
             await fetch('/api/company', {
@@ -42,10 +42,13 @@ export const CompanyEditForm = component$(() => {
         } catch (error) {
             console.log(error)
         }
-    }
+    })
 
     return (
-        <form onSubmit$={handleSubmit} class="max-w-md mx-auto">
+        <form onSubmit$={handleSubmit} class="max-w-md mx-auto bg-primary400 p-8 rounded-lg">
+            <div class="mb-6">
+                <h2 class="font-bold text-3xl"> Editar datos de tu empresa</h2>
+            </div>
             <div class="mb-4">
                 <label class="block text-gray-700 font-bold mb-2" for="name">
                     Nombre de la empresa

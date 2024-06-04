@@ -8,6 +8,7 @@ import { Empleos } from "../Icons/empleos";
 import { Candidatos } from "../Icons/candidatos";
 import { Planillas } from "../Icons/planillas";
 import { Vacaciones } from "../Icons/vacaciones";
+import { Empresa } from "../Icons/empresa"
 import { Configuracion } from "../Icons/configuracion";
 
 export const IconSelect = component$(
@@ -23,6 +24,7 @@ export const IconSelect = component$(
         {icono === "Candidatos" && <Candidatos active={active} />}
         {icono === "Planillas" && <Planillas active={active} />}
         {icono === "Vacaciones" && <Vacaciones active={active} />}
+        {icono === "Empresa" && <Empresa active={active} />}
         {icono === "Configuraciones" && <Configuracion active={active} />}
       </div>
     );
