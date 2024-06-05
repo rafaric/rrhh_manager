@@ -6,7 +6,6 @@ interface SidebarItemProps {
   title: string;
   href?: string;
 }
-
 export const SidebarItem = component$(({ title, href }: SidebarItemProps) => {
   const { url } = useLocation();
   return (
@@ -25,3 +24,4 @@ export const SidebarItem = component$(({ title, href }: SidebarItemProps) => {
     </li>
   );
 });
+
