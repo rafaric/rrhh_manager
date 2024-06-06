@@ -2,10 +2,12 @@ import { Contrato } from '@prisma/client';
 
 export type ContractData = Pick<
 	Contrato,
+	| 'usuarioId'
+	| 'cargoId'
 	| 'salario'
 	| 'descripcion'
 	| 'fecha_fin'
 	| 'fecha_inicio'
-	| 'cargoId'
-	| 'usuarioId'
 >;
+
+export type ContractUpdateData = Partial<ContractData>;
