@@ -37,13 +37,13 @@ export const MyProfile = qwikify$(
           onClick={() => setOpenOptions(!openOptions)}
         />
         {openOptions && (
-          <div className="absolute left-0 top-full mt-1 flex w-full flex-col items-start justify-center gap-2 rounded-xl border border-light px-1 py-2">
-            <button className="flex w-full items-center rounded-xl px-1 py-2 text-sm hover:bg-light">
+          <div className="absolute left-0 top-10 z-50 mt-1 flex w-full flex-col items-start justify-center gap-2 rounded-xl border border-light bg-light px-1 py-2">
+            <button className="flex w-full items-center justify-between rounded-xl px-1 py-2 text-sm hover:bg-primary hover:text-light">
               <img src="/user-outline.svg" />
               Mi perfil
             </button>
             <button
-              className="flex w-full items-center rounded-xl px-1 py-2 text-sm text-[#f00] hover:bg-light"
+              className="flex w-full items-center justify-between rounded-xl px-1 py-2 text-sm text-[#f00] hover:bg-primary hover:text-light"
               onClick={logout}
             >
               <img src="/logout.svg" />

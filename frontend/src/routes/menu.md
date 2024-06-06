@@ -9,4 +9,5 @@
 - [Candidatos](/candidatos)
 - [Planillas](/planillas)
 - [Vacaciones](/vacaciones)
+- [Empresa](/empresa)
 - [Configuraciones](/configuraciones)
