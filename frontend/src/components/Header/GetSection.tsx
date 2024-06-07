@@ -4,6 +4,8 @@ export function getSectionTitle(pathname: string) {
       return "Dashboard";
     case "/empleados/":
       return "Todos los empleados";
+    case "/empleados/nuevo-empleado/":
+      return "Registrar nuevo empleado";
     case "/areas/":
       return "Áreas";
     case "/asistencia/":

@@ -32,3 +32,8 @@ export interface Holiday {
   createdAt?: Date;
   updatedAt?: Date;
 }
+export interface Department {
+  nombre: string;
+  descripcion: string;
+  id: string;
+}
