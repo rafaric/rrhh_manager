@@ -22,10 +22,13 @@ export interface User {
 
 export interface Holiday {
   id: string;
-  fecha: string;
-  descripcion: string;
   estado: string;
-  usuario_id: string;
+  motivo: string;
+  tipo: string;
+  fecha_inicio: string;
+  fecha_fin: string;
+  usuarioId: string;
+  usuario?: User;
   createdAt?: Date;
   updatedAt?: Date;
 }

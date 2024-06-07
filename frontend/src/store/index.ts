@@ -1,9 +1,13 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { User } from "~/modules";
+import type { Holiday, User } from "~/modules";
 interface Store {
   user: User;
   setUser: (newUser: User) => void;
+}
+interface Holidays {
+  holiday: Holiday[];
+  setHoliday: (newHoliday: Holiday[]) => void;
 }
 export const useAppStore = create(
   persist<Store>(
@@ -25,3 +29,9 @@ export const useAppStore = create(
     },
   ),
 );
+export const useHolidayStore = create<Holidays>((set) => ({
+  holiday: [],
+  setHoliday: (newHoliday: Holiday[]) => {
+    set({ holiday: newHoliday });
+  },
+}));

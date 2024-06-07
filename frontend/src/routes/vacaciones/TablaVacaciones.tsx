@@ -6,39 +6,53 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import type { Holiday } from "~/modules";
 import "primereact/resources/themes/bootstrap4-light-purple/theme.css";
+import { useHolidayStore } from "~/store";
 
-export const TablaVacaciones = qwikify$(
-  () => {
+interface Props {
+  onclikshow: any;
+}
+
+export const TablaVacaciones = qwikify$<Props>(
+  ({ onclikshow }) => {
     const [holidays] = useState<Holiday[]>([]);
     const [searchInput, setSearchInput] = useState("");
     const [filteredList, setFilteredList] = useState<Holiday[]>([]);
 
+    const { holiday } = useHolidayStore();
+
     useEffect(() => {
-      for (let i = 0; i < 9; i++) {
+      fetch("/api/holidays");
+      console.log(holiday);
+
+      /* for (let i = 0; i < 9; i++) {
         holidays.push({
           id: `id${i}`,
-          fecha: "14/02/2024",
-          descripcion: `descripcion${i}`,
-          usuario_id: "1",
+          fecha_fin: "14/02/2024",
+          fecha_inicio: "14/02/2024",
+          tipo: "vacaciones",
+          usuarioId: "",
+          motivo: "",
           estado: "pasado",
         });
       }
       holidays.push({
         id: "id11",
-        fecha: "14/02/2024",
-        descripcion: "descripcion11",
-        usuario_id: "2",
+        fecha_inicio: "14/02/2024",
+        fecha_fin: "14/02/2024",
+        tipo: "vacaciones",
+        motivo: "",
         estado: "actual",
-      });
+        usuarioId: "2",
+      }); */
     }, []);
 
     useEffect(() => {
       setFilteredList(
         holidays.filter((holiday) => {
           return (
-            holiday.usuario_id.includes(searchInput) ||
-            holiday.fecha.includes(searchInput) ||
-            holiday.descripcion.toString().includes(searchInput)
+            holiday.usuarioId.includes(searchInput) ||
+            holiday.fecha_inicio.includes(searchInput) ||
+            holiday.motivo.includes(searchInput)
           );
         }),
       );
@@ -66,7 +80,10 @@ export const TablaVacaciones = qwikify$(
                   />
                 </div>
                 <div className="flex w-full justify-end">
-                  <button className="flex items-center gap-1 rounded-xl bg-primary p-4 text-light">
+                  <button
+                    className="flex items-center gap-1 rounded-xl bg-primary p-4 text-light"
+                    onClick={onclikshow}
+                  >
                     <img src="/add-circle.svg" className="w-4" />
                     Agregar nueva vacación
                   </button>
