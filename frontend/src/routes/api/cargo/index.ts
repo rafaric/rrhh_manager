@@ -26,7 +26,7 @@ export const onGet: RequestHandler = async ({ cookie, json }) => {
 
   if (token) {
     try {
-      const res = await fetch("http://192.168.2.107:3000/api/v1/cargo", {
+      const res = await fetch("http://localhost:3000/api/v1/cargo", {
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
