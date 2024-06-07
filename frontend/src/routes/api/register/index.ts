@@ -16,8 +16,8 @@ export const onRequest: RequestHandler = async ({ request, json }) => {
       },
       body: JSON.stringify(body),
     });
-    const { message } = await res.json();
-    json(res.status, message);
+    const data = await res.json();
+    json(res.status, data);
   } catch (error) {
     console.log(error);
   }
