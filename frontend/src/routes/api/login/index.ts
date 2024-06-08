@@ -6,7 +6,7 @@ interface LoginUser {
 export const onRequest: RequestHandler = async ({ request, json, cookie }) => {
   const body: LoginUser = await request.json();
   try {
-    const res = await fetch("http://192.168.2.107:3000/api/v1/users/login", {
+    const res = await fetch("http://localhost:3000/api/v1/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
