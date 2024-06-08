@@ -93,4 +93,6 @@ enum Estado {
 enum Tipo {
   VACACIONES
   ENFERMEDAD
+  IMPONDERABLE
+  OTROS
 }
