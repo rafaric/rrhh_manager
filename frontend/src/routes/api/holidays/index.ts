@@ -20,3 +20,30 @@ export const onRequest: RequestHandler = async ({ json, request, cookie }) => {
     console.log(error);
   }
 };
+
+export const onPost: RequestHandler = async ({ json, request, cookie }) => {
+  const token = cookie.get("user_login");
+  const body: {
+    motivo: string;
+    tipo: string;
+    fecha_inicio: Date;
+    fecha_fin: Date;
+  } = await request.json();
+  try {
+    const res = await fetch(
+      "http://localhost:3000/api/v1/licenseAplication/create",
+      {
+        method: request.method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token?.value}`,
+        },
+        body: JSON.stringify(body),
+      },
+    );
+    const data = await res.json();
+    json(res.status, data);
+  } catch (error) {
+    console.log(error);
+  }
+};

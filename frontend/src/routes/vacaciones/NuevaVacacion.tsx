@@ -1,30 +1,57 @@
-import { $, component$, useStore } from "@builder.io/qwik";
-import { useHolidayStore } from "~/store";
+import { $, component$, useSignal, useStore } from "@builder.io/qwik";
 
 interface NuevaVacacionProps {
   onclickhide: any;
 }
+interface FormData {
+  motivo: string;
+  tipo: string;
+  fecha_inicio: Date;
+  fecha_fin: Date;
+}
 
 export const NuevaVacacion = component$<NuevaVacacionProps>(
   ({ onclickhide }) => {
-    const formData = useStore({
-      id: Math.random().toString(),
-      estado: "Pendiente",
+    const exit = useSignal(false);
+    const formData = useStore<FormData>({
       motivo: "",
       tipo: "",
-      usuarioId: "1",
-      fecha_inicio: "",
-      fecha_fin: "",
+      fecha_inicio: new Date(),
+      fecha_fin: new Date(),
     });
     const today = new Date().toISOString().split("T")[0];
-    const onChange = $((e: any) => {
-      formData[e.target.id] = e.target.value;
+
+    const onChange = $((e: Event, element: HTMLInputElement) => {
+      if (element.id === "fechainicio") {
+        formData.fecha_inicio = new Date(element.value);
+      }
+      if (element.id === "fechafin") {
+        formData.fecha_fin = new Date(element.value);
+      }
+      if (element.id === "motivo") {
+        formData.motivo = element.value;
+      }
     });
-    const onSubmit = $(() => {
-      // eslint-disable-next-line qwik/use-method-usage
-      const { holiday, setHoliday } = useHolidayStore();
-      setHoliday([...holiday, formData]);
-      console.log(holiday);
+    const onChangeSelect = $((e: Event, element: HTMLSelectElement) => {
+      if (element.id === "tipo") {
+        formData.tipo = element.value;
+      }
+    });
+    const onSubmit = $((e: Event) => {
+      e.preventDefault();
+      fetch("/api/holidays", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+          exit.value = true;
+          onclickhide();
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
     });
     return (
       <div class="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-light bg-opacity-70">
@@ -33,7 +60,11 @@ export const NuevaVacacion = component$<NuevaVacacionProps>(
             <h1 class="text-white  text-2xl font-bold">Nueva Vacación</h1>
           </div>
           <div class="mt-10 flex flex-col gap-2 ">
-            <form class="flex flex-col gap-5">
+            <form
+              class="flex flex-col gap-5"
+              onSubmit$={onSubmit}
+              preventdefault:submit
+            >
               <div class="flex justify-between gap-5">
                 <div class="flex w-1/2 flex-col gap-2">
                   <input
@@ -43,49 +74,56 @@ export const NuevaVacacion = component$<NuevaVacacionProps>(
                     class="h-[56px] w-full rounded-lg p-4"
                     onChange$={onChange}
                   />
-                  <input
+                  <select
                     id="tipo"
-                    type="text"
-                    placeholder="Tipo"
-                    class="h-[56px] w-full rounded-lg p-4"
-                  />
+                    class="h-[56px] w-full rounded-lg bg-[#fff] p-4"
+                    onChange$={onChangeSelect}
+                  >
+                    <option value="VACACIONES">Vacaciones</option>
+                    <option value="ENFERMEDAD">Enfermedad</option>
+                    <option value="IMPONDERABLE">Imponderable</option>
+                    <option value="OTROS">Otros</option>
+                  </select>
                 </div>
                 <div class="flex w-1/2 flex-col gap-2">
                   <input
                     id="fechainicio"
-                    type="text"
+                    type="date"
                     placeholder="Seleccionar Fecha Inicio"
                     class="h-[56px] w-full rounded-lg p-4"
                     min={today}
-                    onFocus$={(e) => (e.target.type = "date")}
-                    onBlur$={(e) => (e.target.type = "text")}
+                    onChange$={onChange}
                   />
                   <input
                     id="fechafin"
-                    type="text"
+                    type="date"
                     placeholder="Seleccionar Fecha Fin"
                     class="h-[56px] w-full rounded-lg p-4"
-                    min={today}
-                    onFocus$={(e) => (e.target.type = "date")}
-                    onBlur$={(e) => (e.target.type = "text")}
+                    min={formData.fecha_inicio.toISOString().split("T")[0]}
+                    onChange$={onChange}
                   />
                 </div>
               </div>
+
               <div class="mx-auto mt-14 flex w-full justify-center gap-2">
                 <button
                   class="text-gray-500 hover:text-gray-700 w-full rounded-lg px-4 py-3 hover:border hover:border-primary700"
                   onClick$={onclickhide}
-                  onSubmit$={onSubmit}
                 >
                   Cancelar
                 </button>
                 <button
                   class="text-gray-500 hover:text-gray-700 w-full rounded-lg border border-primary700 bg-primary800 px-4 py-3 text-light hover:bg-primary600"
-                  onClick$={onclickhide}
+                  onSubmit$={onSubmit}
                 >
                   Agregar
                 </button>
               </div>
+              {exit && (
+                <div class="text-green-500">
+                  Vacación agregada correctamente
+                </div>
+              )}
             </form>
           </div>
         </div>

@@ -77,7 +77,7 @@ export const TablaVacaciones = qwikify$<Props>(
           paginator
           rows={5}
           rowsPerPageOptions={[5, 10, 25, 50]}
-          tableStyle={{ minWidth: "50rem" }}
+          tableStyle={{ minWidth: "50rem", cursor: "pointer" }}
           header={() => {
             return (
               <div className="grid grid-cols-2">
@@ -105,7 +105,7 @@ export const TablaVacaciones = qwikify$<Props>(
             );
           }}
           rowClassName={(data) =>
-            `${data.estado === "PENDIENTE" ? "border-l-8 border-l-primary" : "border-l-8"}`
+            `${data.estado === "PENDIENTE" ? "border-l-8 border-l-primary" : "border-l-8"} hover:bg-primary hover:text-light`
           }
           emptyMessage="No hay empleados con vacaciones."
         >
