@@ -28,7 +28,7 @@ export interface Holiday {
   fecha_inicio: string;
   fecha_fin: string;
   usuarioId: string;
-  usuario?: User;
+  Usuario?: User;
   createdAt?: Date;
   updatedAt?: Date;
 }

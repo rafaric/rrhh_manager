@@ -1,4 +1,5 @@
-import { component$, useStore } from "@builder.io/qwik";
+import { $, component$, useStore } from "@builder.io/qwik";
+import { useHolidayStore } from "~/store";
 
 interface NuevaVacacionProps {
   onclickhide: any;
@@ -7,15 +8,24 @@ interface NuevaVacacionProps {
 export const NuevaVacacion = component$<NuevaVacacionProps>(
   ({ onclickhide }) => {
     const formData = useStore({
+      id: Math.random().toString(),
+      estado: "Pendiente",
       motivo: "",
       tipo: "",
-      fechainicio: "",
-      fechafin: "",
+      usuarioId: "1",
+      fecha_inicio: "",
+      fecha_fin: "",
     });
     const today = new Date().toISOString().split("T")[0];
-    const onChange = (e: any) => {
+    const onChange = $((e: any) => {
       formData[e.target.id] = e.target.value;
-    };
+    });
+    const onSubmit = $(() => {
+      // eslint-disable-next-line qwik/use-method-usage
+      const { holiday, setHoliday } = useHolidayStore();
+      setHoliday([...holiday, formData]);
+      console.log(holiday);
+    });
     return (
       <div class="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-light bg-opacity-70">
         <div class=" relative flex h-[350px] w-[700px] flex-col rounded-xl bg-light px-20 py-4 shadow-[-1px_1px_14px_4px_rgba(0,0,0,0.25)]">
@@ -31,6 +41,7 @@ export const NuevaVacacion = component$<NuevaVacacionProps>(
                     type="text"
                     placeholder="Motivo"
                     class="h-[56px] w-full rounded-lg p-4"
+                    onChange$={onChange}
                   />
                   <input
                     id="tipo"
@@ -64,6 +75,7 @@ export const NuevaVacacion = component$<NuevaVacacionProps>(
                 <button
                   class="text-gray-500 hover:text-gray-700 w-full rounded-lg px-4 py-3 hover:border hover:border-primary700"
                   onClick$={onclickhide}
+                  onSubmit$={onSubmit}
                 >
                   Cancelar
                 </button>

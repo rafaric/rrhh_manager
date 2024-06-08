@@ -1,19 +1,21 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
-import { useHolidayStore } from "~/store";
+import { type Holiday } from "~/modules";
 
-export const onRequest: RequestHandler = async ({ request }) => {
+export const onRequest: RequestHandler = async ({ json, request, cookie }) => {
+  const token = cookie.get("user_login");
   try {
     const res = await fetch(
       "http://localhost:3000/api/v1/licenseAplication/AllLicenses",
       {
         method: request.method,
-        headers: request.headers,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token?.value}`,
+        },
       },
     );
-    const data = await res.json();
-    // eslint-disable-next-line qwik/use-method-usage
-    const { setHoliday } = useHolidayStore();
-    setHoliday(data);
+    const data: Holiday[] = await res.json();
+    json(res.status, data);
   } catch (error) {
     console.log(error);
   }

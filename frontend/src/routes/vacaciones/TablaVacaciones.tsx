@@ -14,15 +14,20 @@ interface Props {
 
 export const TablaVacaciones = qwikify$<Props>(
   ({ onclikshow }) => {
-    const [holidays] = useState<Holiday[]>([]);
     const [searchInput, setSearchInput] = useState("");
     const [filteredList, setFilteredList] = useState<Holiday[]>([]);
 
-    const { holiday } = useHolidayStore();
+    const { holiday, setHoliday } = useHolidayStore();
 
     useEffect(() => {
-      fetch("/api/holidays");
-      console.log(holiday);
+      fetch("/api/holidays", {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then(({ data }) => {
+          setHoliday(data);
+          setFilteredList(data);
+        });
 
       /* for (let i = 0; i < 9; i++) {
         holidays.push({
@@ -48,15 +53,23 @@ export const TablaVacaciones = qwikify$<Props>(
 
     useEffect(() => {
       setFilteredList(
-        holidays.filter((holiday) => {
+        holiday.filter((vacacion) => {
           return (
-            holiday.usuarioId.includes(searchInput) ||
-            holiday.fecha_inicio.includes(searchInput) ||
-            holiday.motivo.includes(searchInput)
+            vacacion.Usuario?.apellido.includes(searchInput) ||
+            vacacion.fecha_inicio.includes(searchInput) ||
+            vacacion.motivo.includes(searchInput)
           );
         }),
       );
     }, [searchInput]);
+    const dateBodyTemplate = (rowData: Holiday) => {
+      return <div>{new Date(rowData.fecha_inicio).toLocaleDateString()} </div>;
+    };
+    const usuarioBodyTemplate = (rowData: Holiday) => {
+      return (
+        <div>{rowData.Usuario?.apellido + ", " + rowData.Usuario?.nombre} </div>
+      );
+    };
     return (
       <div className="card">
         <DataTable
@@ -72,7 +85,7 @@ export const TablaVacaciones = qwikify$<Props>(
                   <img src="/search-icon.svg" className="w-4" />
                   <input
                     className="w-full outline-none"
-                    placeholder="Buscar por nombre, apellido o DNI"
+                    placeholder="Buscar por fecha, motivo o usuario"
                     value={searchInput}
                     onChange={({ target: { value } }) => {
                       setSearchInput(value);
@@ -92,14 +105,22 @@ export const TablaVacaciones = qwikify$<Props>(
             );
           }}
           rowClassName={(data) =>
-            `${data.estado === "actual" ? "border-l-8 border-l-primary" : "border-l-8"}`
+            `${data.estado === "PENDIENTE" ? "border-l-8 border-l-primary" : "border-l-8"}`
           }
           emptyMessage="No hay empleados con vacaciones."
         >
           <Column field="estado" header="Estado"></Column>
-          <Column field="fecha" header="Fecha"></Column>
-          <Column field="usuario_id" header="Usuario Id"></Column>
-          <Column field="descripcion" header="Descripción"></Column>
+          <Column
+            field="fecha_inicio"
+            header="Fecha"
+            body={dateBodyTemplate}
+          ></Column>
+          <Column
+            field="usuario"
+            header="Usuario"
+            body={usuarioBodyTemplate}
+          ></Column>
+          <Column field="motivo" header="Motivo"></Column>
         </DataTable>
       </div>
     );
