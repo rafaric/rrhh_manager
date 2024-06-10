@@ -27,6 +27,6 @@ export function getSectionTitle(pathname: string) {
     case "/empresa/editar/":
       return "Editar datos de la empresa";
     default:
-      return "Unknown Section";
+      return "";
   }
 }

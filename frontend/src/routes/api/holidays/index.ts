@@ -47,3 +47,24 @@ export const onPost: RequestHandler = async ({ json, request, cookie }) => {
     console.log(error);
   }
 };
+
+export const onUpdate: RequestHandler = async ({ json, request, cookie }) => {
+  const token = cookie.get("user_login");
+  const body: {
+    estado: string;
+  } = await request.json();
+  try {
+    const res = await fetch("", {
+      method: request.method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token?.value}`,
+      },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    json(res.status, data);
+  } catch (error) {
+    console.log(error);
+  }
+};

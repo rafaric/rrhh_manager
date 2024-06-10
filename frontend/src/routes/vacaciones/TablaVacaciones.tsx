@@ -16,7 +16,7 @@ export const TablaVacaciones = qwikify$<Props>(
   ({ onclikshow }) => {
     const [searchInput, setSearchInput] = useState("");
     const [filteredList, setFilteredList] = useState<Holiday[]>([]);
-
+    const [selectedVacation, setSelectedVacation] = useState({});
     const { holiday, setHoliday } = useHolidayStore();
 
     useEffect(() => {
@@ -107,6 +107,11 @@ export const TablaVacaciones = qwikify$<Props>(
           rowClassName={(data) =>
             `${data.estado === "PENDIENTE" ? "border-l-8 border-l-primary" : "border-l-8"} hover:bg-primary hover:text-light`
           }
+          selectionMode={"single"}
+          selection={selectedVacation}
+          onSelectionChange={(e) => {
+            setSelectedVacation(e.value);
+          }}
           emptyMessage="No hay empleados con vacaciones."
         >
           <Column field="estado" header="Estado"></Column>
@@ -122,6 +127,16 @@ export const TablaVacaciones = qwikify$<Props>(
           ></Column>
           <Column field="motivo" header="Motivo"></Column>
         </DataTable>
+        {selectedVacation.id !== undefined && (
+          <div className="flex w-full flex-col">
+            <a
+              className="mx-auto mt-5 w-fit items-center rounded-lg bg-primary px-4 py-4 text-light hover:bg-primary400"
+              href={`/vacaciones/${selectedVacation.id}`}
+            >
+              Aprobar
+            </a>
+          </div>
+        )}
       </div>
     );
   },
