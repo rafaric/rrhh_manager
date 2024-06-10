@@ -39,10 +39,17 @@ export const EmployeesList = qwikify$(
     useEffect(() => {
       setFilteredList(
         employees.filter((employee) => {
-          return (
-            employee.Usuario.nombre.includes(searchInput) ||
-            employee.Usuario.apellido.includes(searchInput) ||
-            employee.Usuario.dni.toString().includes(searchInput)
+           return (
+            employee.Usuario.nombre
+              .toLocaleLowerCase()
+              .includes(searchInput.toLocaleLowerCase()) ||
+            employee.Usuario.apellido
+              .toLocaleLowerCase()
+              .includes(searchInput.toLocaleLowerCase()) ||
+            employee.Usuario.dni
+              .toString()
+              .toLocaleLowerCase()
+              .includes(searchInput.toLocaleLowerCase())
           );
         }),
       );
@@ -51,7 +58,6 @@ export const EmployeesList = qwikify$(
       <div>
         <DataTable
           className="min-h-[50vh]"
-          lazy
           onRowSelect={(e) => {
             console.log(e.data);
           }}
