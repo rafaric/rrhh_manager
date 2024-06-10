@@ -7,8 +7,9 @@ export const onRequest: RequestHandler = async ({
   query,
 }) => {
   const cargoId = query.get("id") ?? "";
-
-  const token = cookie.get("user_login");
+  const token =
+    cookie.get("user_login")?.value ??
+    request.headers.get("authorization")?.split(" ")[1];
   const body =
     request.method === "GET" || request.method === "DELETE"
       ? null
@@ -19,7 +20,7 @@ export const onRequest: RequestHandler = async ({
         method: request.method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token.value}`,
+          Authorization: `Bearer ${token}`,
         },
         body: body,
       });

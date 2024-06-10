@@ -34,7 +34,6 @@ export default component$(() => {
     track(() => action.value);
     const res = await fetch(`/api/cargo`, {
       method: "GET",
-      credentials: "include",
     });
     const { data } = await res.json();
     departments.data = data;
