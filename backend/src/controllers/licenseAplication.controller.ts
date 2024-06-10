@@ -68,8 +68,6 @@ class LicenseApplicationController {
         return res.status(CODE.BAD_REQUEST).json({ error: "ID is required" });
       }
       const response = await licenseAplicationServices.updateLicense(id, body);
-      console.log(req.body);
-
       res.status(CODE.OK).json({ data: response });
     } catch (error) {
       errorMessage(res, error);
