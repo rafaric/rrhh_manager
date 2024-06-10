@@ -1,6 +1,7 @@
 import { component$, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import { Form, routeAction$ } from "@builder.io/qwik-city";
 import { Header } from "~/components/Header/index";
+import { AreaCard } from "~/components/areasCard";
 import type { Department } from "~/modules";
 export const useAddDepartment = routeAction$(async (dataForm, requestEvent) => {
   const token = requestEvent.cookie.get("user_login")?.value;
@@ -69,13 +70,7 @@ export default component$(() => {
         </div>
         <div class="grid w-full grid-cols-3 justify-center gap-5">
           {departments.data.map((department, i) => (
-            <div
-              key={i}
-              class="w-full min-w-40 cursor-pointer rounded-lg border border-light p-2 hover:bg-light"
-            >
-              <h2 class="text-lg font-semibold">{department.nombre}</h2>
-              <p class="text-sm">{department.descripcion}</p>
-            </div>
+            <AreaCard key={i} department={department} />
           ))}
         </div>
       </section>
