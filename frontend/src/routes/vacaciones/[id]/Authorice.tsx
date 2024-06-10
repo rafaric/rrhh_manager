@@ -27,9 +27,7 @@ export const Authorice = component$(() => {
   const onClick = $(async () => {
     await fetch(`http://localhost:5173/api/holidays/${id}/`, {
       method: "PATCH",
-      body: {
-        estado: "APROBADO",
-      },
+      body: JSON.stringify({ estado: "APROBADO" }),
     })
       .then((res) => res.json())
       .then(({ data }) => {
