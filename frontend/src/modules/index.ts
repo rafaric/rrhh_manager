@@ -19,3 +19,8 @@ export interface User {
   empresa?: string;
   solicitud?: string;
 }
+export interface Department {
+  nombre: string;
+  descripcion: string;
+  id: string;
+}
