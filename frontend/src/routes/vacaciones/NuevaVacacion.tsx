@@ -33,9 +33,7 @@ export const NuevaVacacion = component$<NuevaVacacionProps>(
       }
     });
     const onChangeSelect = $((e: Event, element: HTMLSelectElement) => {
-      if (element.id === "tipo") {
-        formData.tipo = element.value;
-      }
+      formData.tipo = element.value;
     });
     const onSubmit = $((e: Event) => {
       e.preventDefault();
@@ -45,7 +43,6 @@ export const NuevaVacacion = component$<NuevaVacacionProps>(
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("Success:", data);
           exit.value = true;
           onclickhide();
         })

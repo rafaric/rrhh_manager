@@ -1,9 +1,21 @@
-import { useSignal, component$, useTask$, $ } from "@builder.io/qwik";
-import { useLocation } from "@builder.io/qwik-city";
+import {
+  useSignal,
+  component$,
+  useTask$,
+  useVisibleTask$,
+} from "@builder.io/qwik";
+import { server$, useLocation, useNavigate } from "@builder.io/qwik-city";
 import type { Holiday } from "~/modules";
 
 export const Authorice = component$(() => {
   const loc = useLocation();
+  const token = useSignal("");
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(() => {
+    const cookie = document.cookie;
+    token.value = cookie.slice(cookie.indexOf("=") + 1);
+  });
+  const nav = useNavigate();
   const id = loc.params.id;
   const licencia = useSignal<Holiday>({
     id: "0",
@@ -24,15 +36,18 @@ export const Authorice = component$(() => {
         licencia.value = data;
       });
   });
-  const onClick = $(async () => {
-    await fetch(`http://localhost:5173/api/holidays/${id}/`, {
+  const onClick = server$(function () {
+    const data = fetch(`http://localhost:3000/api/v1/licenseAplication/${id}`, {
       method: "PATCH",
-      body: JSON.stringify({ estado: "APROBADO" }),
-    })
-      .then((res) => res.json())
-      .then(({ data }) => {
-        console.log(data);
-      });
+      body: JSON.stringify({ estado: licencia.value.estado }),
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token.value}`,
+        /*  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMzY4ODMxLTlkYjYtNDY4OC05MmNhLTJlYTQyYzlkNmU1ZSIsImVtYWlsIjoiYWRtaW5AcmguY29tIiwicm9sIjoiQURNSU4iLCJkbmkiOjg1Njc5NDEyLCJpYXQiOjE3MTgwNTgyMzEsImV4cCI6MTcxODE0NDYzMX0.el7b_-MnTrS6obV8bH02Ezg7D35vdV0-JBQeeyUxhUQ`, */
+      },
+    }).then((res) => res.json());
+    return data;
   });
 
   return (
@@ -98,6 +113,11 @@ export const Authorice = component$(() => {
               id="estado"
               class="h-[45px] w-full rounded-lg bg-[#fff] px-4"
               value={licencia.value.estado}
+              onChange$={($event, $element) => {
+                if ($event.target) {
+                  licencia.value.estado = $element.value;
+                }
+              }}
             >
               <option value="PENDIENTE">Pendiente</option>
               <option value="APROBADO">Aprobado</option>
@@ -111,8 +131,10 @@ export const Authorice = component$(() => {
               </button>
               <button
                 class="text-gray-500 hover:text-gray-700 w-full rounded-lg border border-primary700 bg-primary800 px-4 py-3 text-light hover:bg-primary600"
-                // onSubmit$={onSubmit}
-                onClick$={onClick}
+                onClick$={() => {
+                  onClick();
+                  nav("/vacaciones/");
+                }}
               >
                 Agregar
               </button>
