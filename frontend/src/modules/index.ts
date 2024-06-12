@@ -37,3 +37,15 @@ export interface Department {
   descripcion: string;
   id: string;
 }
+export interface Employees {
+  Cargo: Department;
+  Usuario: User;
+  cargoId: string;
+  descripcion: string;
+  fecha_fin: string;
+  fecha_inicio: string;
+  id: string;
+  salario: number;
+  status: string;
+  usuarioId: string;
+}

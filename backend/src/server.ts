@@ -3,14 +3,21 @@ import dotenv from "dotenv";
 import ApiRouter from "./routes";
 import { connect } from "./database";
 import cors from "cors";
+import cron from "node-cron";
 
 dotenv.config();
 
 const app: Express = express();
 
 app.use(express.json());
-app.disable("x-powered-by");
 app.use(cors());
+app.disable("x-powered-by");
+
+const hourlyEvent = () => {
+  console.log("Hourly event executed");
+};
+
+cron.schedule("0 * * * *", hourlyEvent);
 
 //Conectar a Database
 connect();
