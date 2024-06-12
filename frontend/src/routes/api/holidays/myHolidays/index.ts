@@ -6,7 +6,7 @@ export const onRequest: RequestHandler = async ({ json, request, cookie }) => {
 
   try {
     const res = await fetch(
-      "http://localhost:3000/api/v1/licenseAplication/myLicenses",
+      "https://backup-s15-04-t-node-react.onrender.com/api/v1/licenseAplication/myLicenses",
       {
         method: request.method,
         headers: {

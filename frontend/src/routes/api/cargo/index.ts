@@ -16,14 +16,18 @@ export const onRequest: RequestHandler = async ({
       : JSON.stringify(await request.json());
   if (token) {
     try {
-      const res = await fetch("http://localhost:3000/api/v1/cargo/" + cargoId, {
-        method: request.method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        "https://backup-s15-04-t-node-react.onrender.com/api/v1/cargo/" +
+          cargoId,
+        {
+          method: request.method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: body,
         },
-        body: body,
-      });
+      );
 
       const data = await res.json();
 
