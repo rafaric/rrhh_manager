@@ -4,29 +4,39 @@ import { qwikify$ } from "@builder.io/qwik-react";
 import { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import type { Holiday } from "~/modules";
+import { User, type Holiday } from "~/modules";
 import "primereact/resources/themes/bootstrap4-light-purple/theme.css";
 import { useHolidayStore } from "~/store";
 
 interface Props {
+  show: boolean;
   onclikshow: any;
 }
 
 export const TablaVacaciones = qwikify$<Props>(
-  ({ onclikshow }) => {
+  ({ show, onclikshow }) => {
     const [searchInput, setSearchInput] = useState("");
     const [filteredList, setFilteredList] = useState<Holiday[]>([]);
-    const [selectedVacation, setSelectedVacation] = useState({});
+    const [selectedVacation, setSelectedVacation] = useState<Holiday>();
     const { holiday, setHoliday } = useHolidayStore();
+    const [user, setUser] = useState<User>();
 
     useEffect(() => {
-      fetch("/api/holidays", {
-        method: "GET",
-      })
+      if (typeof window !== "undefined") {
+        const user = JSON.parse(localStorage.getItem("rrhh_store") || "");
+        setUser(user?.state?.user);
+      }
+      fetch(
+        `${user?.rol === "ADMIN" ? "/api/holidays" : "/api/holidays/myHolidays"}`,
+        {
+          method: "GET",
+        },
+      )
         .then((res) => res.json())
         .then(({ data }) => {
           setHoliday(data);
           setFilteredList(data);
+          console.log(data);
         });
 
       /* for (let i = 0; i < 9; i++) {
@@ -49,7 +59,7 @@ export const TablaVacaciones = qwikify$<Props>(
         estado: "actual",
         usuarioId: "2",
       }); */
-    }, []);
+    }, [show]);
 
     useEffect(() => {
       setFilteredList(
@@ -66,8 +76,10 @@ export const TablaVacaciones = qwikify$<Props>(
       return <div>{new Date(rowData.fecha_inicio).toLocaleDateString()} </div>;
     };
     const usuarioBodyTemplate = (rowData: Holiday) => {
-      return (
-        <div>{rowData.Usuario?.apellido + ", " + rowData.Usuario?.nombre} </div>
+      return rowData.Usuario !== undefined ? (
+        <div>{rowData.Usuario.apellido + ", " + rowData.Usuario.nombre} </div>
+      ) : (
+        <div>{user?.apellido + ", " + user?.nombre} </div>
       );
     };
     return (
@@ -109,8 +121,8 @@ export const TablaVacaciones = qwikify$<Props>(
           }
           selectionMode={"single"}
           selection={selectedVacation}
-          onSelectionChange={(e) => {
-            setSelectedVacation(e.value);
+          onSelectionChange={(e: any) => {
+            setSelectedVacation(e.value as Holiday);
           }}
           emptyMessage="No hay empleados con vacaciones."
         >
@@ -127,14 +139,16 @@ export const TablaVacaciones = qwikify$<Props>(
           ></Column>
           <Column field="motivo" header="Motivo"></Column>
         </DataTable>
-        {selectedVacation.id !== undefined && (
+        {selectedVacation !== undefined && (
           <div className="flex w-full flex-col">
-            <a
-              className="mx-auto mt-5 w-fit items-center rounded-lg bg-primary px-4 py-4 text-light hover:bg-primary400"
-              href={`/vacaciones/${selectedVacation.id}`}
-            >
-              Aprobar
-            </a>
+            {user?.rol === "ADMIN" && (
+              <a
+                className="mx-auto mt-5 w-fit items-center rounded-lg bg-primary px-4 py-4 text-light hover:bg-primary400"
+                href={`/vacaciones/${selectedVacation.id}`}
+              >
+                Aprobar
+              </a>
+            )}
           </div>
         )}
       </div>

@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useStore } from "@builder.io/qwik";
+import { $, component$, useStore } from "@builder.io/qwik";
 
 interface NuevaVacacionProps {
   onclickhide: any;
@@ -12,7 +12,6 @@ interface FormData {
 
 export const NuevaVacacion = component$<NuevaVacacionProps>(
   ({ onclickhide }) => {
-    const exit = useSignal(false);
     const formData = useStore<FormData>({
       motivo: "",
       tipo: "",
@@ -43,7 +42,6 @@ export const NuevaVacacion = component$<NuevaVacacionProps>(
       })
         .then((response) => response.json())
         .then((data) => {
-          exit.value = true;
           onclickhide();
         })
         .catch((error) => {
@@ -116,11 +114,6 @@ export const NuevaVacacion = component$<NuevaVacacionProps>(
                   Agregar
                 </button>
               </div>
-              {exit && (
-                <div class="text-green-500">
-                  Vacación agregada correctamente
-                </div>
-              )}
             </form>
           </div>
         </div>

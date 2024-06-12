@@ -1,22 +1,14 @@
-import {
-  useSignal,
-  component$,
-  useTask$,
-  useVisibleTask$,
-} from "@builder.io/qwik";
+import { useSignal, component$, useVisibleTask$ } from "@builder.io/qwik";
 import { server$, useLocation, useNavigate } from "@builder.io/qwik-city";
 import type { Holiday } from "~/modules";
 
 export const Authorice = component$(() => {
-  const loc = useLocation();
   const token = useSignal("");
-  // eslint-disable-next-line qwik/no-use-visible-task
-  useVisibleTask$(() => {
-    const cookie = document.cookie;
-    token.value = cookie.slice(cookie.indexOf("=") + 1);
-  });
-  const nav = useNavigate();
+  const loc = useLocation();
   const id = loc.params.id;
+
+  const nav = useNavigate();
+
   const licencia = useSignal<Holiday>({
     id: "0",
     tipo: "",
@@ -27,27 +19,34 @@ export const Authorice = component$(() => {
     usuarioId: "",
   });
 
-  useTask$(async () => {
-    await fetch(`http://localhost:5173/api/holidays/${id}/`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then(({ data }) => {
-        licencia.value = data;
-      });
-  });
   const onClick = server$(function () {
     const data = fetch(`http://localhost:3000/api/v1/licenseAplication/${id}`, {
       method: "PATCH",
       body: JSON.stringify({ estado: licencia.value.estado }),
       headers: {
         "Content-Type": "application/json",
-        // Authorization: `Bearer ${token}`,
-        Authorization: `Bearer ${token.value}`,
+        Authorization: token.value,
         /*  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMzY4ODMxLTlkYjYtNDY4OC05MmNhLTJlYTQyYzlkNmU1ZSIsImVtYWlsIjoiYWRtaW5AcmguY29tIiwicm9sIjoiQURNSU4iLCJkbmkiOjg1Njc5NDEyLCJpYXQiOjE3MTgwNTgyMzEsImV4cCI6MTcxODE0NDYzMX0.el7b_-MnTrS6obV8bH02Ezg7D35vdV0-JBQeeyUxhUQ`, */
       },
     }).then((res) => res.json());
     return data;
+  });
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(async () => {
+    const cookie = document.cookie;
+    token.value = `Bearer ${cookie.slice(cookie.indexOf("=") + 1)}`;
+    console.log(token.value);
+    await fetch(`http://localhost:5173/api/holidays/${id}/`, {
+      method: "GET",
+      headers: {
+        Authorization: token.value,
+      },
+    })
+      .then((res) => res.json())
+      .then(({ data }) => {
+        licencia.value = data;
+        console.log(data);
+      });
   });
 
   return (
@@ -126,7 +125,10 @@ export const Authorice = component$(() => {
             </select>
 
             <div class="mx-auto mt-14 flex w-full justify-center gap-2">
-              <button class="text-gray-500 hover:text-gray-700 w-full rounded-lg px-4 py-3 hover:border hover:border-primary700">
+              <button
+                class="text-gray-500 hover:text-gray-700 w-full rounded-lg px-4 py-3 hover:border hover:border-primary700"
+                onClick$={() => nav("/vacaciones/")}
+              >
                 Cancelar
               </button>
               <button
@@ -136,7 +138,7 @@ export const Authorice = component$(() => {
                   nav("/vacaciones/");
                 }}
               >
-                Agregar
+                Modificar pedido
               </button>
             </div>
           </div>

@@ -14,7 +14,7 @@ export default component$(() => {
   return (
     <section class="w-full ">
       <Header />
-      <TablaVacaciones onclikshow$={onclickshow} />
+      <TablaVacaciones show={show.value} onclikshow$={onclickshow} />
       {show.value ? <NuevaVacacion onclickhide={onclickhide} /> : null}
     </section>
   );

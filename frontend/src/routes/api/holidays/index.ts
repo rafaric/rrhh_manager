@@ -2,7 +2,7 @@ import type { RequestHandler } from "@builder.io/qwik-city";
 import { type Holiday } from "~/modules";
 
 export const onRequest: RequestHandler = async ({ json, request, cookie }) => {
-  const token = await cookie.get("user_login");
+  const token = cookie.get("user_login");
 
   try {
     const res = await fetch(
@@ -11,7 +11,7 @@ export const onRequest: RequestHandler = async ({ json, request, cookie }) => {
         method: request.method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token?.value}`,
+          Authorization: `Bearer ${token.value}`,
         },
       },
     );
