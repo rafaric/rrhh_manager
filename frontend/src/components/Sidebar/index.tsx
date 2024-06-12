@@ -9,7 +9,7 @@ export const Sidebar = component$(() => {
   // eslint-disable-next-line qwik/no-use-visible-task
   useVisibleTask$(async () => {
     if (window.localStorage.getItem("rrhh_store")) {
-      const token = JSON.parse(window.localStorage.getItem("rrhh_store"));
+      const token = JSON.parse(window.localStorage.getItem("rrhh_store") || "");
       user.value = token.state.user.rol;
     }
   });

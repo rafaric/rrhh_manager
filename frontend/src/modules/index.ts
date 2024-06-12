@@ -31,6 +31,7 @@ export interface Holiday {
   Usuario?: User;
   createdAt?: Date;
   updatedAt?: Date;
+  [key: string]: any;
 }
 export interface Department {
   nombre: string;

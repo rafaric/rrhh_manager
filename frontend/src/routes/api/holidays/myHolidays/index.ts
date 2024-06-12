@@ -11,7 +11,7 @@ export const onRequest: RequestHandler = async ({ json, request, cookie }) => {
         method: request.method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token.value}`,
+          Authorization: `Bearer ${token ? token.value : ""}`,
         },
       },
     );

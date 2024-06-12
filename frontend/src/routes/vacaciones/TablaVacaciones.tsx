@@ -4,7 +4,7 @@ import { qwikify$ } from "@builder.io/qwik-react";
 import { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { User, type Holiday } from "~/modules";
+import { type User, type Holiday } from "~/modules";
 import "primereact/resources/themes/bootstrap4-light-purple/theme.css";
 import { useHolidayStore } from "~/store";
 
@@ -56,6 +56,7 @@ export const TablaVacaciones = qwikify$<Props>(
           return searchFields.some((field) => {
             const value = field
               .split(".")
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               .reduce((obj, key) => obj?.[key], vacacion);
             return value
               .toString()
