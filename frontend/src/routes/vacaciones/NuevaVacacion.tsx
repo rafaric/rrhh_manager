@@ -41,7 +41,7 @@ export const NuevaVacacion = component$<NuevaVacacionProps>(
         body: JSON.stringify(formData),
       })
         .then((response) => response.json())
-        .then((data) => {
+        .then(() => {
           onclickhide();
         })
         .catch((error) => {
