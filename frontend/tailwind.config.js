@@ -16,6 +16,7 @@ export default {
       dark: "#16151C",
       light: "#D9E1E1",
       gray: "#A2A1A8",
+      error: "#F44336",
     },
     fontFamily: {
       ZenMaru: ["Zen Maru Gothic", "sans-serif", "serif"],

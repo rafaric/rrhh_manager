@@ -12,6 +12,12 @@ interface Props {
   show: boolean;
   onclikshow: any;
 }
+enum estado {
+  Aprobado = "APROBADO",
+  Rechazado = "RECHAZADO",
+  Pendiente = "PENDIENTE",
+  Cancelado = "CANCELADO",
+}
 
 export const TablaVacaciones = qwikify$<Props>(
   ({ show, onclikshow }) => {
@@ -25,50 +31,37 @@ export const TablaVacaciones = qwikify$<Props>(
       if (typeof window !== "undefined") {
         const user = JSON.parse(localStorage.getItem("rrhh_store") || "");
         setUser(user?.state?.user);
-      }
-      fetch(
-        `${user?.rol === "ADMIN" ? "/api/holidays" : "/api/holidays/myHolidays"}`,
-        {
-          method: "GET",
-        },
-      )
-        .then((res) => res.json())
-        .then(({ data }) => {
-          setHoliday(data);
-          setFilteredList(data);
-          console.log(data);
-        });
+        const isAdmin = user?.state.user.rol === "ADMIN";
+        const apiUrl = isAdmin ? "/api/holidays" : "/api/holidays/myHolidays";
 
-      /* for (let i = 0; i < 9; i++) {
-        holidays.push({
-          id: `id${i}`,
-          fecha_fin: "14/02/2024",
-          fecha_inicio: "14/02/2024",
-          tipo: "vacaciones",
-          usuarioId: "",
-          motivo: "",
-          estado: "pasado",
-        });
+        fetch(apiUrl, {
+          method: "GET",
+        })
+          .then((res) => res.json())
+          .then(({ data }) => {
+            setHoliday(data);
+            setFilteredList(data);
+            console.log(data);
+          });
       }
-      holidays.push({
-        id: "id11",
-        fecha_inicio: "14/02/2024",
-        fecha_fin: "14/02/2024",
-        tipo: "vacaciones",
-        motivo: "",
-        estado: "actual",
-        usuarioId: "2",
-      }); */
     }, [show]);
 
     useEffect(() => {
       setFilteredList(
         holiday.filter((vacacion) => {
-          return (
-            vacacion.Usuario?.apellido.includes(searchInput) ||
-            vacacion.fecha_inicio.includes(searchInput) ||
-            vacacion.motivo.includes(searchInput)
-          );
+          const searchFields = ["fecha_inicio", "motivo"];
+          if (user?.rol === "ADMIN") {
+            searchFields.push("Usuario.apellido");
+          }
+          return searchFields.some((field) => {
+            const value = field
+              .split(".")
+              .reduce((obj, key) => obj?.[key], vacacion);
+            return value
+              .toString()
+              .toLowerCase()
+              .includes(searchInput.toLowerCase());
+          });
         }),
       );
     }, [searchInput]);
@@ -117,7 +110,7 @@ export const TablaVacaciones = qwikify$<Props>(
             );
           }}
           rowClassName={(data) =>
-            `${data.estado === "PENDIENTE" ? "border-l-8 border-l-primary" : "border-l-8"} hover:bg-primary hover:text-light`
+            `${data.estado === estado.Aprobado ? "border-l-8 border-l-primary" : data.estado === estado.Cancelado ? "border-l-8 border-l-primary200" : data.estado === estado.Rechazado ? "border-l-8 border-l-error" : "border-l-8"} hover:bg-primary hover:text-light`
           }
           selectionMode={"single"}
           selection={selectedVacation}
