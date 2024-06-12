@@ -17,7 +17,8 @@ export const onRequest: RequestHandler = async ({
   if (token) {
     try {
       const res = await fetch(
-        "http://localhost:3000/api/v1/contract/" + contractId,
+        "https://backup-s15-04-t-node-react.onrender.com/api/v1/contract/" +
+          contractId,
         {
           method: request.method,
           headers: {

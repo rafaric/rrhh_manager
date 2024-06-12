@@ -13,7 +13,7 @@ export const onGet: RequestHandler = async ({
 
   try {
     const res = await fetch(
-      `http://localhost:3000/api/v1/licenseAplication/${params.id}`,
+      `https://backup-s15-04-t-node-react.onrender.com/api/v1/licenseAplication/${params.id}`,
       {
         method: "GET",
 

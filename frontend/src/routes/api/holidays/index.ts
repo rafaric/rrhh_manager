@@ -6,7 +6,7 @@ export const onRequest: RequestHandler = async ({ json, request, cookie }) => {
 
   try {
     const res = await fetch(
-      "http://localhost:3000/api/v1/licenseAplication/AllLicenses",
+      "https://backup-s15-04-t-node-react.onrender.com/api/v1/licenseAplication/AllLicenses",
       {
         method: request.method,
         headers: {
@@ -32,7 +32,7 @@ export const onPost: RequestHandler = async ({ json, request, cookie }) => {
   } = await request.json();
   try {
     const res = await fetch(
-      "http://localhost:3000/api/v1/licenseAplication/create",
+      "https://backup-s15-04-t-node-react.onrender.com/api/v1/licenseAplication/create",
       {
         method: request.method,
         headers: {

@@ -20,15 +20,18 @@ export const Authorice = component$(() => {
   });
 
   const onClick = server$(function () {
-    const data = fetch(`http://localhost:3000/api/v1/licenseAplication/${id}`, {
-      method: "PATCH",
-      body: JSON.stringify({ estado: licencia.value.estado }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token.value,
-        /*  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMzY4ODMxLTlkYjYtNDY4OC05MmNhLTJlYTQyYzlkNmU1ZSIsImVtYWlsIjoiYWRtaW5AcmguY29tIiwicm9sIjoiQURNSU4iLCJkbmkiOjg1Njc5NDEyLCJpYXQiOjE3MTgwNTgyMzEsImV4cCI6MTcxODE0NDYzMX0.el7b_-MnTrS6obV8bH02Ezg7D35vdV0-JBQeeyUxhUQ`, */
+    const data = fetch(
+      `https://backup-s15-04-t-node-react.onrender.com/api/v1/licenseAplication/${id}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({ estado: licencia.value.estado }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token.value,
+          /*  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjhhMzY4ODMxLTlkYjYtNDY4OC05MmNhLTJlYTQyYzlkNmU1ZSIsImVtYWlsIjoiYWRtaW5AcmguY29tIiwicm9sIjoiQURNSU4iLCJkbmkiOjg1Njc5NDEyLCJpYXQiOjE3MTgwNTgyMzEsImV4cCI6MTcxODE0NDYzMX0.el7b_-MnTrS6obV8bH02Ezg7D35vdV0-JBQeeyUxhUQ`, */
+        },
       },
-    }).then((res) => res.json());
+    ).then((res) => res.json());
     return data;
   });
   // eslint-disable-next-line qwik/no-use-visible-task
