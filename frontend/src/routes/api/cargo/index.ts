@@ -1,11 +1,15 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
 
-export const onRequest: RequestHandler = async ({ cookie, json, request }) => {
+export const onRequest: RequestHandler = async ({
+  cookie,
+  json,
+  request,
+  query,
+}) => {
+  const cargoId = query.get("id") ?? "";
   const token =
     cookie.get("user_login")?.value ??
     request.headers.get("authorization")?.split(" ")[1];
-  console.log(token);
-
   const body =
     request.method === "GET" || request.method === "DELETE"
       ? null
