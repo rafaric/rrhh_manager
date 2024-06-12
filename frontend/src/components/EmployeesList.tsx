@@ -24,7 +24,6 @@ export const EmployeesList = qwikify$(
     const [searchInput, setSearchInput] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [filteredList, setFilteredList] = useState<Employees[]>([]);
-
     useEffect(() => {
       fetch("/api/contract")
         .then((res) => res.json())
@@ -39,7 +38,7 @@ export const EmployeesList = qwikify$(
     useEffect(() => {
       setFilteredList(
         employees.filter((employee) => {
-           return (
+          return (
             employee.Usuario.nombre
               .toLocaleLowerCase()
               .includes(searchInput.toLocaleLowerCase()) ||
@@ -59,7 +58,7 @@ export const EmployeesList = qwikify$(
         <DataTable
           className="min-h-[50vh]"
           onRowSelect={(e) => {
-            console.log(e.data);
+            location.pathname = `/empleados/${e.data.id}`;
           }}
           selectionMode="single"
           stripedRows
