@@ -1,7 +1,7 @@
 import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { SidebarItem } from "./SidebarItem";
 import { useContent } from "@builder.io/qwik-city";
-import Logo from "/Logopreview.png";
+import Logo from "../../media/Logopreview.png";
 
 export const Sidebar = component$(() => {
   const { menu } = useContent();
